@@ -11,14 +11,6 @@
 .PARAMETER RecommendationID
     ID of the recommendation for which to retrieve software information.
 
-.PARAMETER Authorization
-    
-
-.EXAMPLE
-    PS C:\> Get-MdRecommendationSoftware -Authorization $authorization
-
-    <insert description here>
-
 .EXAMPLE
     PS C:\> Get-MdRecommendationSoftware -RecommendationID $recommendationid
 
@@ -32,21 +24,17 @@
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [Alias('Id')]
         [string]
-        $RecommendationID,
-
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetRecommendationById')]
-        [string]
-        $Authorization
+        $RecommendationID
     )
     process {
 		$__mapping = @{
-            'Authorization' = 'Authorization'
+
 		}
 
 		$__param = @{
 			Body = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
-			Header = $PSBoundParameters | ConvertTo-HashTable -Include @('Authorization') -Mapping $__mapping
+			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'recommendations/{RecommendationID}/software' -Replace '{RecommendationID}',$RecommendationID
 			Method = 'get'
 			RequiredScopes = 'SecurityRecommendation.Read'

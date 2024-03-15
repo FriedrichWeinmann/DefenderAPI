@@ -6,14 +6,14 @@
 .DESCRIPTION
     Cancel a specific machine action
 
-.PARAMETER Comment
-    A comment to associate to the machine action cancellation
-
 .PARAMETER MachineActionID
     The identifier of the machine action to cancel
 
+.PARAMETER Comment
+    A comment to associate to the machine action cancellation
+
 .EXAMPLE
-    PS C:\> Set-MdMachineactionCancel -Comment $comment -MachineActionID $machineactionid
+    PS C:\> Set-MdMachineactionCancel -MachineActionID $machineactionid -Comment $comment
 
     Cancel a specific machine action
 
@@ -25,11 +25,11 @@
     param (
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $Comment,
+        $MachineActionID,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $MachineActionID
+        $Comment
     )
     process {
 		$__mapping = @{

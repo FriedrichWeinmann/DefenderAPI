@@ -8,16 +8,8 @@
 
     Scopes required (delegate auth): SecurityRecommendation.Read
 
-.PARAMETER Authorization
-    
-
 .PARAMETER RecommendationID
     ID of the recommendation to retrieve.
-
-.EXAMPLE
-    PS C:\> Get-MdRecommendation -Authorization $authorization -RecommendationID $recommendationid
-
-    <insert description here>
 
 .EXAMPLE
     PS C:\> Get-MdRecommendation
@@ -25,7 +17,7 @@
     Lists all security recommendations
 
 .EXAMPLE
-    PS C:\> Get-MdRecommendation -Authorization $authorization
+    PS C:\> Get-MdRecommendation -RecommendationID $recommendationid
 
     <insert description here>
 
@@ -34,11 +26,6 @@
 #>
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = '')]
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetRecommendationById')]
-        [string]
-        $Authorization,
-
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetRecommendationById')]
         [Alias('Id')]
         [string]
@@ -46,13 +33,13 @@
     )
     process {
 		$__mapping = @{
-            'Authorization' = 'Authorization'
+
 		}
 
 		$__param = @{
 			Body = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
-			Header = $PSBoundParameters | ConvertTo-HashTable -Include @('Authorization') -Mapping $__mapping
+			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'recommendations'
 			Method = 'get'
 			RequiredScopes = 'SecurityRecommendation.Read'

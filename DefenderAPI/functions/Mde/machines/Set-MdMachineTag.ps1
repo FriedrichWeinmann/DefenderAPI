@@ -6,17 +6,17 @@
 .DESCRIPTION
     Add or remove a tag to/from a machine
 
-.PARAMETER Value
-    The tag to add or remove
-
 .PARAMETER Action
     The action to perform. Value should be one of 'Add' (to add a tag) or 'Remove' (to remove a tag)
+
+.PARAMETER Value
+    The tag to add or remove
 
 .PARAMETER MachineID
     The ID of the machine to which the tag should be added or removed
 
 .EXAMPLE
-    PS C:\> Set-MdMachineTag -Value $value -Action $action -MachineID $machineid
+    PS C:\> Set-MdMachineTag -Action $action -Value $value -MachineID $machineid
 
     Add or remove a tag to/from a machine
 
@@ -28,11 +28,11 @@
     param (
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $Value,
+        $Action,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $Action,
+        $Value,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [Alias('Id')]
@@ -41,12 +41,12 @@
     )
     process {
 		$__mapping = @{
-            'Value' = 'Value'
             'Action' = 'Action'
+            'Value' = 'Value'
 		}
 
 		$__param = @{
-			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('Value','Action') -Mapping $__mapping
+			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('Action','Value') -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'machines/{MachineID}/tags' -Replace '{MachineID}',$MachineID

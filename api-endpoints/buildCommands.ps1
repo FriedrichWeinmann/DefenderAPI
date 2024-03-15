@@ -28,7 +28,12 @@ Get-ChildItem -Path "$PSScriptRoot\..\DefenderAPI\functions\MDE\*" | ForEach-Obj
 
 # Build from Swagger & overrides
 $commands = ConvertFrom-ARSwagger @paramConvertFromARSwagger
-foreach ($command in $commands) { $command.PassThruActions = $true }
+foreach ($command in $commands) {
+	$command.PassThruActions = $true
+	if ($command.Parameters.Authorization.Type -eq 'Header') {
+		$command.Parameters.Remove('Authorization')
+	}
+}
 $commands | Export-ARCommand @paramExportARCommand
 $global:_arCommands['Endpoint'] = $commands
 #endregion Endpoint

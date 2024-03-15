@@ -27,11 +27,19 @@
 	.PARAMETER RequiredScopes
 		Any authentication scopes needed.
 		Used for documentary purposes only.
+
+	.PARAMETER Header
+		Any additional headers to include on top of authentication and content-type.
 	
 	.PARAMETER Service
 		Which service to execute against.
 		Determines the API endpoint called to.
 		Defaults to "Endpoint"
+
+	.PARAMETER SerializationDepth
+		How deeply to serialize the request body when converting it to json.
+		Defaults to the value in the 'DefenderAPI.Request.SerializationDepth' configuration setting.
+		This in turn defaults to "99"
 	
 	.EXAMPLE
 		PS C:\> Invoke-DefenderAPIRequest -Path 'alerts' -RequiredScopes 'Alert.Read'

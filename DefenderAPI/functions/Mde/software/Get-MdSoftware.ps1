@@ -8,14 +8,11 @@
 
     Scopes required (delegate auth): Software.Read
 
-.PARAMETER Authorization
-    
-
 .PARAMETER SoftwareID
     ID of the software to retrieve.
 
 .EXAMPLE
-    PS C:\> Get-MdSoftware -Authorization $authorization -SoftwareID $softwareid
+    PS C:\> Get-MdSoftware -SoftwareID $softwareid
 
     <insert description here>
 
@@ -24,21 +21,11 @@
 
     Lists all security recommendations
 
-.EXAMPLE
-    PS C:\> Get-MdSoftware -Authorization $authorization
-
-    <insert description here>
-
 .LINK
     https://docs.microsoft.com/en-us/microsoft-365/security/defender-endpoint/get-software?view=o365-worldwide
 #>
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = '')]
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetProductById')]
-        [string]
-        $Authorization,
-
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetProductById')]
         [Alias('Id')]
         [string]
@@ -46,13 +33,13 @@
     )
     process {
 		$__mapping = @{
-            'Authorization' = 'Authorization'
+
 		}
 
 		$__param = @{
 			Body = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
-			Header = $PSBoundParameters | ConvertTo-HashTable -Include @('Authorization') -Mapping $__mapping
+			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'software'
 			Method = 'get'
 			RequiredScopes = 'Software.Read'

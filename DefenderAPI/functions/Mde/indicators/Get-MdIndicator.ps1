@@ -9,20 +9,20 @@
 .PARAMETER Top
     Returns only the first n results.
 
+.PARAMETER Orderby
+    Sorts the results.
+
 .PARAMETER Select
     Selects which properties to include in the response, defaults to all.
+
+.PARAMETER Skip
+    Skips the first n results.
 
 .PARAMETER Filter
     Filters the results, using OData syntax.
 
 .PARAMETER Count
     Includes a count of the matching results in the response.
-
-.PARAMETER Orderby
-    Sorts the results.
-
-.PARAMETER Skip
-    Skips the first n results.
 
 .EXAMPLE
     PS C:\> Get-MdIndicator
@@ -39,8 +39,16 @@
         $Top,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [string]
+        $Orderby,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string[]]
         $Select,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [int32]
+        $Skip,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
@@ -48,29 +56,21 @@
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [boolean]
-        $Count,
-
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [string]
-        $Orderby,
-
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [int32]
-        $Skip
+        $Count
     )
     process {
 		$__mapping = @{
             'Top' = '$top'
+            'Orderby' = '$orderby'
             'Select' = '$select'
+            'Skip' = '$skip'
             'Filter' = '$filter'
             'Count' = '$count'
-            'Orderby' = '$orderby'
-            'Skip' = '$skip'
 		}
 
 		$__param = @{
 			Body = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
-			Query = $PSBoundParameters | ConvertTo-HashTable -Include @('Top','Select','Filter','Count','Orderby','Skip') -Mapping $__mapping
+			Query = $PSBoundParameters | ConvertTo-HashTable -Include @('Top','Orderby','Select','Skip','Filter','Count') -Mapping $__mapping
 			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'indicators'
 			Method = 'get'

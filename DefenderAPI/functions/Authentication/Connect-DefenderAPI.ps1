@@ -17,6 +17,10 @@
 		Any scopes to include in the request.
 		Only used for interactive/delegate workflows, ignored for Certificate based authentication or when using Client Secrets.
 
+	.PARAMETER Browser
+		Use an interactive logon in your default browser.
+		This is the default logon experience.
+
 	.PARAMETER DeviceCode
 		Use the Device Code delegate authentication flow.
 		This will prompt the user to complete login via browser.

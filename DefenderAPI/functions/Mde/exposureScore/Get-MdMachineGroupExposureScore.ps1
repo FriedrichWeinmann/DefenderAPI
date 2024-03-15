@@ -8,13 +8,7 @@
 
     Scopes required (delegate auth): Score.Read
 
-.PARAMETER Authorization
-    
 
-.EXAMPLE
-    PS C:\> Get-MdMachineGroupExposureScore -Authorization $authorization
-
-    <insert description here>
 
 .EXAMPLE
     PS C:\> Get-MdMachineGroupExposureScore
@@ -26,19 +20,17 @@
 #>
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetProductById')]
-        [string]
-        $Authorization
+
     )
     process {
 		$__mapping = @{
-            'Authorization' = 'Authorization'
+
 		}
 
 		$__param = @{
 			Body = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
-			Header = $PSBoundParameters | ConvertTo-HashTable -Include @('Authorization') -Mapping $__mapping
+			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'exposureScore/byMachineGroups'
 			Method = 'get'
 			RequiredScopes = 'Score.Read'

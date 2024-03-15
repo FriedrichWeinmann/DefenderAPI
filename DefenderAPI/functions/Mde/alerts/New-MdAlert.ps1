@@ -8,14 +8,11 @@
 
     Scopes required (delegate auth): Alert.ReadWrite
 
-.PARAMETER ReportID
-    Report Id of the event
+.PARAMETER EventTime
+    Time of the event as string, e.g. 2018-08-03T16:45:21.7115183Z
 
-.PARAMETER RecommendedAction
-    Recommended action for the Alert
-
-.PARAMETER Category
-    Category of the alert
+.PARAMETER MachineID
+    ID of the machine on which the event was identified
 
 .PARAMETER Title
     Title of the Alert
@@ -26,14 +23,17 @@
 .PARAMETER Description
     Description of the Alert
 
-.PARAMETER MachineID
-    ID of the machine on which the event was identified
+.PARAMETER RecommendedAction
+    Recommended action for the Alert
 
-.PARAMETER EventTime
-    Time of the event as string, e.g. 2018-08-03T16:45:21.7115183Z
+.PARAMETER Category
+    Category of the alert
+
+.PARAMETER ReportID
+    Report Id of the event
 
 .EXAMPLE
-    PS C:\> New-MdAlert -Category $category -Title $title -Severity $severity -Description $description
+    PS C:\> New-MdAlert -Title $title -Severity $severity -Description $description -Category $category
 
     Create Alert based on specific Event
 
@@ -45,15 +45,11 @@
     param (
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $ReportID,
+        $EventTime,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $RecommendedAction,
-
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [string]
-        $Category,
+        $MachineID,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
@@ -69,26 +65,30 @@
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $MachineID,
+        $RecommendedAction,
+
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [string]
+        $Category,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $EventTime
+        $ReportID
     )
     process {
 		$__mapping = @{
-            'ReportID' = 'Report ID'
-            'RecommendedAction' = 'Recommended Action'
-            'Category' = 'Category'
+            'EventTime' = 'Event Time'
+            'MachineID' = 'Machine ID'
             'Title' = 'Title'
             'Severity' = 'Severity'
             'Description' = 'Description'
-            'MachineID' = 'Machine ID'
-            'EventTime' = 'Event Time'
+            'RecommendedAction' = 'Recommended Action'
+            'Category' = 'Category'
+            'ReportID' = 'Report ID'
 		}
 
 		$__param = @{
-			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('ReportID','RecommendedAction','Category','Title','Severity','Description','MachineID','EventTime') -Mapping $__mapping
+			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('EventTime','MachineID','Title','Severity','Description','RecommendedAction','Category','ReportID') -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'alerts/createAlertByReference'

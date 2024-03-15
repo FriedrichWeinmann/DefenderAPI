@@ -8,16 +8,8 @@
 
     Scopes required (delegate auth): Software.Read
 
-.PARAMETER Authorization
-    
-
 .PARAMETER MachineID
     ID of the machine to read the installed software from.
-
-.EXAMPLE
-    PS C:\> Get-MdMachineSoftware -Authorization $authorization
-
-    <insert description here>
 
 .EXAMPLE
     PS C:\> Get-MdMachineSoftware -MachineID $machineid
@@ -29,10 +21,6 @@
 #>
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetProductById')]
-        [string]
-        $Authorization,
-
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [Alias('Id')]
         [string]
@@ -40,13 +28,13 @@
     )
     process {
 		$__mapping = @{
-            'Authorization' = 'Authorization'
+
 		}
 
 		$__param = @{
 			Body = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
-			Header = $PSBoundParameters | ConvertTo-HashTable -Include @('Authorization') -Mapping $__mapping
+			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'machines/{MachineID}/software' -Replace '{MachineID}',$MachineID
 			Method = 'get'
 			RequiredScopes = 'Software.Read'
