@@ -94,7 +94,7 @@ FunctionsToExport = 'Assert-DefenderAPIConnection', 'Connect-DefenderAPI',
                'Get-MdSoftware', 'Get-MdSoftwareDistribution', 
                'Get-MdSoftwareMachinereference', 'Get-MdSoftwareVulnerability', 
                'Get-MdVulnerability', 'Get-MdVulnerableMachine', 
-               'Invoke-MdeAdvancedHuntingQuery'
+               'Invoke-MSecAdvancedHuntingQuery'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()

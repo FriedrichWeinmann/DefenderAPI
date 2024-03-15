@@ -6,14 +6,14 @@
 .DESCRIPTION
     Restrict execution of all applications on the machine except a predefined set
 
-.PARAMETER MachineID
-    The ID of the machine to restrict
-
 .PARAMETER Comment
     A comment to associate to the restriction
 
+.PARAMETER MachineID
+    The ID of the machine to restrict
+
 .EXAMPLE
-    PS C:\> Set-MdMachineRestrictcodeexecution -MachineID $machineid -Comment $comment
+    PS C:\> Set-MdMachineRestrictcodeexecution -Comment $comment -MachineID $machineid
 
     Restrict execution of all applications on the machine except a predefined set
 
@@ -24,13 +24,13 @@
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [Alias('Id')]
         [string]
-        $MachineID,
+        $Comment,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [Alias('Id')]
         [string]
-        $Comment
+        $MachineID
     )
     process {
 		$__mapping = @{

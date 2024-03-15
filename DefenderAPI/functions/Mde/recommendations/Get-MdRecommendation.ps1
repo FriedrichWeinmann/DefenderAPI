@@ -11,23 +11,15 @@
 .PARAMETER RecommendationID
     ID of the recommendation to retrieve.
 
-.PARAMETER Authorization
-    
-
-.EXAMPLE
-    PS C:\> Get-MdRecommendation -Authorization $authorization
-
-    <insert description here>
-
-.EXAMPLE
-    PS C:\> Get-MdRecommendation -RecommendationID $recommendationid -Authorization $authorization
-
-    <insert description here>
-
 .EXAMPLE
     PS C:\> Get-MdRecommendation
 
     Lists all security recommendations
+
+.EXAMPLE
+    PS C:\> Get-MdRecommendation -RecommendationID $recommendationid
+
+    <insert description here>
 
 .LINK
     https://docs.microsoft.com/en-us/microsoft-365/security/defender-endpoint/get-all-recommendations?view=o365-worldwide
@@ -37,22 +29,17 @@
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetRecommendationById')]
         [Alias('Id')]
         [string]
-        $RecommendationID,
-
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = '')]
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetRecommendationById')]
-        [string]
-        $Authorization
+        $RecommendationID
     )
     process {
 		$__mapping = @{
-            'Authorization' = 'Authorization'
+
 		}
 
 		$__param = @{
 			Body = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
-			Header = $PSBoundParameters | ConvertTo-HashTable -Include @('Authorization') -Mapping $__mapping
+			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'recommendations'
 			Method = 'get'
 			RequiredScopes = 'SecurityRecommendation.Read'

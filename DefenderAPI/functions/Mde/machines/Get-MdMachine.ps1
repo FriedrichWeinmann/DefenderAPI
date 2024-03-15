@@ -8,23 +8,23 @@
 
     Scopes required (delegate auth): Machine.Read
 
-.PARAMETER Orderby
-    Sorts the results.
-
 .PARAMETER Top
     Returns only the first n results.
 
-.PARAMETER Filter
-    Filters the results, using OData syntax.
+.PARAMETER Orderby
+    Sorts the results.
 
 .PARAMETER MachineID
     The identifier of the machine to retrieve
 
+.PARAMETER Select
+    Selects which properties to include in the response, defaults to all.
+
 .PARAMETER Skip
     Skips the first n results.
 
-.PARAMETER Select
-    Selects which properties to include in the response, defaults to all.
+.PARAMETER Filter
+    Filters the results, using OData syntax.
 
 .PARAMETER Count
     Includes a count of the matching results in the response.
@@ -45,16 +45,12 @@
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [string]
-        $Orderby,
-
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [int32]
         $Top,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $Filter,
+        $Orderby,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetSingleMachine')]
         [Alias('Id')]
@@ -62,12 +58,16 @@
         $MachineID,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [string[]]
+        $Select,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [int32]
         $Skip,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [string[]]
-        $Select,
+        [string]
+        $Filter,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [boolean]
@@ -75,17 +75,17 @@
     )
     process {
 		$__mapping = @{
-            'Orderby' = '$orderby'
             'Top' = '$top'
-            'Filter' = '$filter'
-            'Skip' = '$skip'
+            'Orderby' = '$orderby'
             'Select' = '$select'
+            'Skip' = '$skip'
+            'Filter' = '$filter'
             'Count' = '$count'
 		}
 
 		$__param = @{
 			Body = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
-			Query = $PSBoundParameters | ConvertTo-HashTable -Include @('Orderby','Top','Filter','Skip','Select','Count') -Mapping $__mapping
+			Query = $PSBoundParameters | ConvertTo-HashTable -Include @('Top','Orderby','Select','Skip','Filter','Count') -Mapping $__mapping
 			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'machines'
 			Method = 'get'

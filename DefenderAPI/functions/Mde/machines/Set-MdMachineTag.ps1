@@ -9,14 +9,14 @@
 .PARAMETER Action
     The action to perform. Value should be one of 'Add' (to add a tag) or 'Remove' (to remove a tag)
 
-.PARAMETER MachineID
-    The ID of the machine to which the tag should be added or removed
-
 .PARAMETER Value
     The tag to add or remove
 
+.PARAMETER MachineID
+    The ID of the machine to which the tag should be added or removed
+
 .EXAMPLE
-    PS C:\> Set-MdMachineTag -Action $action -MachineID $machineid -Value $value
+    PS C:\> Set-MdMachineTag -Action $action -Value $value -MachineID $machineid
 
     Add or remove a tag to/from a machine
 
@@ -31,13 +31,13 @@
         $Action,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [Alias('Id')]
         [string]
-        $MachineID,
+        $Value,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [Alias('Id')]
         [string]
-        $Value
+        $MachineID
     )
     process {
 		$__mapping = @{

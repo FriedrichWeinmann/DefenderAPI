@@ -11,6 +11,7 @@
 	#endregion Token Data
 	
 	#region Connection Data
+	[string]$Service
 	[string]$Type
 	[string]$ClientID
 	[string]$TenantID
@@ -27,7 +28,8 @@
 	#endregion Connection Data
 	
 	#region Constructors
-	DefenderToken([string]$ClientID, [string]$TenantID, [Securestring]$ClientSecret, [string]$ServiceUrl) {
+	DefenderToken([string]$Service, [string]$ClientID, [string]$TenantID, [Securestring]$ClientSecret, [string]$ServiceUrl) {
+		$this.Service = $Service
 		$this.ClientID = $ClientID
 		$this.TenantID = $TenantID
 		$this.ClientSecret = $ClientSecret
@@ -35,7 +37,8 @@
 		$this.Type = 'ClientSecret'
 	}
 	
-	DefenderToken([string]$ClientID, [string]$TenantID, [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate, [string]$ServiceUrl) {
+	DefenderToken([string]$Service, [string]$ClientID, [string]$TenantID, [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate, [string]$ServiceUrl) {
+		$this.Service = $Service
 		$this.ClientID = $ClientID
 		$this.TenantID = $TenantID
 		$this.Certificate = $Certificate
@@ -43,7 +46,8 @@
 		$this.Type = 'Certificate'
 	}
 
-	DefenderToken([string]$ClientID, [string]$TenantID, [pscredential]$Credential, [string]$ServiceUrl) {
+	DefenderToken([string]$Service, [string]$ClientID, [string]$TenantID, [pscredential]$Credential, [string]$ServiceUrl) {
+		$this.Service = $Service
 		$this.ClientID = $ClientID
 		$this.TenantID = $TenantID
 		$this.Credential = $Credential
@@ -51,7 +55,8 @@
 		$this.Type = 'UsernamePassword'
 	}
 
-	DefenderToken([string]$ClientID, [string]$TenantID, [string]$ServiceUrl, [bool]$IsDeviceCode) {
+	DefenderToken([string]$Service, [string]$ClientID, [string]$TenantID, [string]$ServiceUrl, [bool]$IsDeviceCode) {
+		$this.Service = $Service
 		$this.ClientID = $ClientID
 		$this.TenantID = $TenantID
 		$this.ServiceUrl = $ServiceUrl

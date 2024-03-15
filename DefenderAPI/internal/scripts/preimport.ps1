@@ -15,3 +15,9 @@ $moduleRoot = Split-Path (Split-Path $PSScriptRoot)
 
 # Load classes
 (Get-ChildItem "$moduleRoot\internal\classes\*.ps1" -ErrorAction Ignore).FullName
+
+# Load Tab Expansion
+(Get-ChildItem "$moduleRoot\internal\tepp\*.tepp.ps1" -ErrorAction Ignore).FullName
+
+# Load Tab Expansion Assignment
+"$moduleRoot\internal\tepp\assignment.ps1"

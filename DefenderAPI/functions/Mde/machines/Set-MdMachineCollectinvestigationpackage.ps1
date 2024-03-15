@@ -6,14 +6,14 @@
 .DESCRIPTION
     Collect investigation package from a machine
 
-.PARAMETER MachineID
-    The ID of the machine to collect the investigation from
-
 .PARAMETER Comment
     A comment to associate to the collection
 
+.PARAMETER MachineID
+    The ID of the machine to collect the investigation from
+
 .EXAMPLE
-    PS C:\> Set-MdMachineCollectinvestigationpackage -MachineID $machineid -Comment $comment
+    PS C:\> Set-MdMachineCollectinvestigationpackage -Comment $comment -MachineID $machineid
 
     Collect investigation package from a machine
 
@@ -24,13 +24,13 @@
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [Alias('Id')]
         [string]
-        $MachineID,
+        $Comment,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [Alias('Id')]
         [string]
-        $Comment
+        $MachineID
     )
     process {
 		$__mapping = @{

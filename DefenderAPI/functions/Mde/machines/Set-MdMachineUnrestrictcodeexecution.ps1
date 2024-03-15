@@ -6,14 +6,14 @@
 .DESCRIPTION
     Enable execution of any application on the machine
 
-.PARAMETER MachineID
-    The ID of the machine to unrestrict
-
 .PARAMETER Comment
     A comment to associate to the restriction removal
 
+.PARAMETER MachineID
+    The ID of the machine to unrestrict
+
 .EXAMPLE
-    PS C:\> Set-MdMachineUnrestrictcodeexecution -MachineID $machineid -Comment $comment
+    PS C:\> Set-MdMachineUnrestrictcodeexecution -Comment $comment -MachineID $machineid
 
     Enable execution of any application on the machine
 
@@ -24,13 +24,13 @@
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [Alias('Id')]
         [string]
-        $MachineID,
+        $Comment,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [Alias('Id')]
         [string]
-        $Comment
+        $MachineID
     )
     process {
 		$__mapping = @{

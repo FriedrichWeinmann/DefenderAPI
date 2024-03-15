@@ -8,11 +8,11 @@
 
     Scopes required (delegate auth): Machine.Isolate
 
-.PARAMETER Comment
-    A comment to associate to the isolation
-
 .PARAMETER IsolationType
     Type of the isolation. Allowed values are 'Full' (for full isolation) or 'Selective' (to restrict only limited set of applications from accessing the network)
+
+.PARAMETER Comment
+    A comment to associate to the isolation
 
 .PARAMETER MachineID
     The ID of the machine to isolate
@@ -27,13 +27,13 @@
 #>
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [string]
-        $Comment,
-
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
         $IsolationType,
+
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [string]
+        $Comment,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [Alias('Id')]
@@ -42,12 +42,12 @@
     )
     process {
 		$__mapping = @{
-            'Comment' = 'Comment'
             'IsolationType' = 'Isolation Type'
+            'Comment' = 'Comment'
 		}
 
 		$__param = @{
-			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('Comment','IsolationType') -Mapping $__mapping
+			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('IsolationType','Comment') -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'machines/{MachineID}/isolate' -Replace '{MachineID}',$MachineID

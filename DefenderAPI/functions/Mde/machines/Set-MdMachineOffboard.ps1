@@ -6,14 +6,14 @@
 .DESCRIPTION
     Offboard machine from Microsoft Defender ATP
 
-.PARAMETER MachineID
-    The ID of the machine to offboard
-
 .PARAMETER Comment
     A comment to associate to the offboarding action
 
+.PARAMETER MachineID
+    The ID of the machine to offboard
+
 .EXAMPLE
-    PS C:\> Set-MdMachineOffboard -MachineID $machineid -Comment $comment
+    PS C:\> Set-MdMachineOffboard -Comment $comment -MachineID $machineid
 
     Offboard machine from Microsoft Defender ATP
 
@@ -24,13 +24,13 @@
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [Alias('Id')]
         [string]
-        $MachineID,
+        $Comment,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [Alias('Id')]
         [string]
-        $Comment
+        $MachineID
     )
     process {
 		$__mapping = @{

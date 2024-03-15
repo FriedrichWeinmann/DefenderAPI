@@ -11,14 +11,6 @@
 .PARAMETER MachineID
     ID of the machine to get recommendations for.
 
-.PARAMETER Authorization
-    
-
-.EXAMPLE
-    PS C:\> Get-MdMachineRecommendation -Authorization $authorization
-
-    <insert description here>
-
 .EXAMPLE
     PS C:\> Get-MdMachineRecommendation -MachineID $machineid
 
@@ -32,21 +24,17 @@
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [Alias('Id')]
         [string]
-        $MachineID,
-
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetRecommendationById')]
-        [string]
-        $Authorization
+        $MachineID
     )
     process {
 		$__mapping = @{
-            'Authorization' = 'Authorization'
+
 		}
 
 		$__param = @{
 			Body = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
-			Header = $PSBoundParameters | ConvertTo-HashTable -Include @('Authorization') -Mapping $__mapping
+			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'machines/{MachineID}/recommendations' -Replace '{MachineID}',$MachineID
 			Method = 'get'
 			RequiredScopes = 'SecurityRecommendation.Read'

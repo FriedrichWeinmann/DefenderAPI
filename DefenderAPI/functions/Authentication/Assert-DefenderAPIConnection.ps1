@@ -42,7 +42,7 @@
 	{
 		if ($script:_DefenderTokens["$Service"]) { return }
 		
-		$message = "Not connected yet! Use Connect-DefenderAPIService to establish a connection first."
+		$message = "Not connected yet! Use Connect-DefenderAPIService to establish a connection to '$Service' first."
 		if ($RequiredScopes) { $message = $message + " Scopes required for this call: $($RequiredScopes -join ', ')"}
 		Invoke-TerminatingException -Cmdlet $Cmdlet -Message  -Category ConnectionError
 	}

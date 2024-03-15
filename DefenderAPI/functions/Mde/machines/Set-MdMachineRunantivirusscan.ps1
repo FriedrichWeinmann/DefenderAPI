@@ -6,14 +6,14 @@
 .DESCRIPTION
     Initiate Windows Defender Antivirus scan on a machine
 
+.PARAMETER ScanType
+    Type of scan to perform. Allowed values are 'Quick' or 'Full'
+
 .PARAMETER Comment
     A comment to associate to the scan request
 
 .PARAMETER MachineID
     The ID of the machine to scan
-
-.PARAMETER ScanType
-    Type of scan to perform. Allowed values are 'Quick' or 'Full'
 
 .EXAMPLE
     PS C:\> Set-MdMachineRunantivirusscan -Comment $comment -MachineID $machineid
@@ -26,6 +26,10 @@
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
+        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [string]
+        $ScanType,
+
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
         $Comment,
@@ -33,20 +37,16 @@
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [Alias('Id')]
         [string]
-        $MachineID,
-
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [string]
-        $ScanType
+        $MachineID
     )
     process {
 		$__mapping = @{
-            'Comment' = 'Comment'
             'ScanType' = 'Scan Type'
+            'Comment' = 'Comment'
 		}
 
 		$__param = @{
-			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('Comment','ScanType') -Mapping $__mapping
+			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('ScanType','Comment') -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'machines/{MachineID}/runAntiVirusScan' -Replace '{MachineID}',$MachineID

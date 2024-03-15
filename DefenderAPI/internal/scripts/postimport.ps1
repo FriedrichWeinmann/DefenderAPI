@@ -16,12 +16,6 @@ $moduleRoot = Split-Path (Split-Path $PSScriptRoot)
 # Load Scriptblocks
 (Get-ChildItem "$moduleRoot\internal\scriptblocks\*.ps1" -ErrorAction Ignore).FullName
 
-# Load Tab Expansion
-(Get-ChildItem "$moduleRoot\internal\tepp\*.tepp.ps1" -ErrorAction Ignore).FullName
-
-# Load Tab Expansion Assignment
-"$moduleRoot\internal\tepp\assignment.ps1"
-
 # Load Module Variables
 "$moduleRoot\internal\scripts\variables.ps1"
 

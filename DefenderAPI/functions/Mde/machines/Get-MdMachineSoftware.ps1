@@ -11,16 +11,8 @@
 .PARAMETER MachineID
     ID of the machine to read the installed software from.
 
-.PARAMETER Authorization
-    
-
 .EXAMPLE
     PS C:\> Get-MdMachineSoftware -MachineID $machineid
-
-    <insert description here>
-
-.EXAMPLE
-    PS C:\> Get-MdMachineSoftware -Authorization $authorization
 
     <insert description here>
 
@@ -32,21 +24,17 @@
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [Alias('Id')]
         [string]
-        $MachineID,
-
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetProductById')]
-        [string]
-        $Authorization
+        $MachineID
     )
     process {
 		$__mapping = @{
-            'Authorization' = 'Authorization'
+
 		}
 
 		$__param = @{
 			Body = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
-			Header = $PSBoundParameters | ConvertTo-HashTable -Include @('Authorization') -Mapping $__mapping
+			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'machines/{MachineID}/software' -Replace '{MachineID}',$MachineID
 			Method = 'get'
 			RequiredScopes = 'Software.Read'

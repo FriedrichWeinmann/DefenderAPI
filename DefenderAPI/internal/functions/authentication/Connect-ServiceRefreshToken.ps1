@@ -6,6 +6,10 @@
 	.DESCRIPTION
 		Connect with the refresh token provided previously.
 		Used mostly for delegate authentication flows to avoid interactivity.
+
+	.PARAMETER Token
+		The DefenderToken object with the refresh token to use.
+		The token is then refreshed in-place with no output provided.
 	
 	.EXAMPLE
 		PS C:\> Connect-ServiceRefreshToken

@@ -11,14 +11,6 @@
 .PARAMETER VulnerabilityID
     ID of the vulnerability for which to retrieve affected devices.
 
-.PARAMETER Authorization
-    
-
-.EXAMPLE
-    PS C:\> Get-MdVulnerableMachine -Authorization $authorization
-
-    <insert description here>
-
 .EXAMPLE
     PS C:\> Get-MdVulnerableMachine -VulnerabilityID $vulnerabilityid
 
@@ -32,21 +24,17 @@
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [Alias('Id')]
         [string]
-        $VulnerabilityID,
-
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetRecommendationById')]
-        [string]
-        $Authorization
+        $VulnerabilityID
     )
     process {
 		$__mapping = @{
-            'Authorization' = 'Authorization'
+
 		}
 
 		$__param = @{
 			Body = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
-			Header = $PSBoundParameters | ConvertTo-HashTable -Include @('Authorization') -Mapping $__mapping
+			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'vulnerabilities/{VulnerabilityID}/machineReferences' -Replace '{VulnerabilityID}',$VulnerabilityID
 			Method = 'get'
 			RequiredScopes = 'Vulnerability.Read'

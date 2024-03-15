@@ -8,17 +8,23 @@
 
     Scopes required (delegate auth): Ti.ReadWrite
 
-.PARAMETER Action
-    The action that will be taken if the indicator will be discovered in the organization
+.PARAMETER Title
+    The indicator title
 
 .PARAMETER IndicatorType
     The type of the indicator
 
-.PARAMETER Severity
-    The severity of the indicator
-
 .PARAMETER Description
     The indicator description
+
+.PARAMETER ExpirationTime
+    The expiration time of the indicator
+
+.PARAMETER IndicatorValue
+    The value of the indicator
+
+.PARAMETER Severity
+    The severity of the indicator
 
 .PARAMETER Application
     The application associated with the indicator
@@ -26,17 +32,11 @@
 .PARAMETER RecommendedActions
     Recommended actions for the indicator
 
-.PARAMETER IndicatorValue
-    The value of the indicator
-
-.PARAMETER ExpirationTime
-    The expiration time of the indicator
-
-.PARAMETER Title
-    The indicator title
+.PARAMETER Action
+    The action that will be taken if the indicator will be discovered in the organization
 
 .EXAMPLE
-    PS C:\> New-MdIndicator -Action $action -Description $description -Title $title
+    PS C:\> New-MdIndicator -Title $title -Description $description -Action $action
 
     Submit a new indicator
 
@@ -48,19 +48,27 @@
     param (
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $Action,
+        $Title,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
         $IndicatorType,
 
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [string]
-        $Severity,
-
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
         $Description,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [string]
+        $ExpirationTime,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [string]
+        $IndicatorValue,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [string]
+        $Severity,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
@@ -70,33 +78,25 @@
         [string]
         $RecommendedActions,
 
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [string]
-        $IndicatorValue,
-
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [string]
-        $ExpirationTime,
-
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $Title
+        $Action
     )
     process {
 		$__mapping = @{
-            'Action' = 'Action'
+            'Title' = 'Title'
             'IndicatorType' = 'Indicator type'
-            'Severity' = 'Severity'
             'Description' = 'Description'
+            'ExpirationTime' = 'Expiration time'
+            'IndicatorValue' = 'Indicator Value'
+            'Severity' = 'Severity'
             'Application' = 'Application'
             'RecommendedActions' = 'Recommended Actions'
-            'IndicatorValue' = 'Indicator Value'
-            'ExpirationTime' = 'Expiration time'
-            'Title' = 'Title'
+            'Action' = 'Action'
 		}
 
 		$__param = @{
-			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('Action','IndicatorType','Severity','Description','Application','RecommendedActions','IndicatorValue','ExpirationTime','Title') -Mapping $__mapping
+			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('Title','IndicatorType','Description','ExpirationTime','IndicatorValue','Severity','Application','RecommendedActions','Action') -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'indicators'

@@ -6,14 +6,14 @@
 .DESCRIPTION
     Start automated investigation on a machine
 
-.PARAMETER MachineID
-    The ID of the machine to investigate
-
 .PARAMETER Comment
     A comment to associate to the investigation
 
+.PARAMETER MachineID
+    The ID of the machine to investigate
+
 .EXAMPLE
-    PS C:\> Set-MdMachineStartinvestigation -MachineID $machineid -Comment $comment
+    PS C:\> Set-MdMachineStartinvestigation -Comment $comment -MachineID $machineid
 
     Start automated investigation on a machine
 
@@ -24,13 +24,13 @@
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [Alias('Id')]
         [string]
-        $MachineID,
+        $Comment,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [Alias('Id')]
         [string]
-        $Comment
+        $MachineID
     )
     process {
 		$__mapping = @{
