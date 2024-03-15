@@ -8,19 +8,14 @@
 
     Scopes required (delegate auth): SecurityRecommendation.Read
 
-.PARAMETER RecommendationID
-    ID of the recommendation to retrieve.
-
 .PARAMETER Authorization
     
 
-.EXAMPLE
-    PS C:\> Get-MdRecommendation -Authorization $authorization
-
-    <insert description here>
+.PARAMETER RecommendationID
+    ID of the recommendation to retrieve.
 
 .EXAMPLE
-    PS C:\> Get-MdRecommendation -RecommendationID $recommendationid -Authorization $authorization
+    PS C:\> Get-MdRecommendation -Authorization $authorization -RecommendationID $recommendationid
 
     <insert description here>
 
@@ -29,20 +24,25 @@
 
     Lists all security recommendations
 
+.EXAMPLE
+    PS C:\> Get-MdRecommendation -Authorization $authorization
+
+    <insert description here>
+
 .LINK
     https://docs.microsoft.com/en-us/microsoft-365/security/defender-endpoint/get-all-recommendations?view=o365-worldwide
 #>
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetRecommendationById')]
-        [Alias('Id')]
-        [string]
-        $RecommendationID,
-
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = '')]
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetRecommendationById')]
         [string]
-        $Authorization
+        $Authorization,
+
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetRecommendationById')]
+        [Alias('Id')]
+        [string]
+        $RecommendationID
     )
     process {
 		$__mapping = @{

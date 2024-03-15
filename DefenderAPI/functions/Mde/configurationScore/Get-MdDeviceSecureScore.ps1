@@ -12,12 +12,12 @@
     
 
 .EXAMPLE
-    PS C:\> Get-MdDeviceSecureScore -Authorization $authorization
+    PS C:\> Get-MdDeviceSecureScore
 
     <insert description here>
 
 .EXAMPLE
-    PS C:\> Get-MdDeviceSecureScore
+    PS C:\> Get-MdDeviceSecureScore -Authorization $authorization
 
     <insert description here>
 

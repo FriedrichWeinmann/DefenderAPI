@@ -8,14 +8,14 @@
 
     Scopes required (delegate auth): Machine.Isolate
 
-.PARAMETER MachineID
-    The ID of the machine to unisolate
-
 .PARAMETER Comment
     A comment to associate to the unisolation
 
+.PARAMETER MachineID
+    The ID of the machine to unisolate
+
 .EXAMPLE
-    PS C:\> Disable-MdMachineIsolation -MachineID $machineid -Comment $comment
+    PS C:\> Disable-MdMachineIsolation -Comment $comment -MachineID $machineid
 
     Unisolate a machine from network
 
@@ -25,13 +25,13 @@
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [Alias('Id')]
         [string]
-        $MachineID,
+        $Comment,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [Alias('Id')]
         [string]
-        $Comment
+        $MachineID
     )
     process {
 		$__mapping = @{

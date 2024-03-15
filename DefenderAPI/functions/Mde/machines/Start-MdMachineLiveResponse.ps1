@@ -8,12 +8,6 @@
 
     Scopes required (delegate auth): Machine.LiveResponse
 
-.PARAMETER Comment
-    A comment to associate to the isolation
-
-.PARAMETER MachineID
-    ID of the machine to execute a live response script upon
-
 .PARAMETER Commands
     The live response commands to execute.
 Example:
@@ -31,8 +25,14 @@ Example:
 	)
 }
 
+.PARAMETER Comment
+    A comment to associate to the isolation
+
+.PARAMETER MachineID
+    ID of the machine to execute a live response script upon
+
 .EXAMPLE
-    PS C:\> Start-MdMachineLiveResponse -Comment $comment -MachineID $machineid -Commands $commands
+    PS C:\> Start-MdMachineLiveResponse -Commands $commands -Comment $comment -MachineID $machineid
 
     Run live response api commands for a single machine
 
@@ -42,26 +42,26 @@ Example:
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [array]
+        $Commands,
+
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
         $Comment,
 
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [Alias('Id')]
         [string]
-        $MachineID,
-
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [array]
-        $Commands
+        $MachineID
     )
     process {
 		$__mapping = @{
-            'Comment' = 'Comment'
             'Commands' = 'Commands'
+            'Comment' = 'Comment'
 		}
 
 		$__param = @{
-			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('Comment','Commands') -Mapping $__mapping
+			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('Commands','Comment') -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'machines/{MachineID}/runliveresponse' -Replace '{MachineID}',$MachineID

@@ -17,11 +17,11 @@
 .PARAMETER Determination
     The determination of the alert. One of 'NotAvailable', 'Apt', 'Malware', 'SecurityPersonnel', 'SecurityTesting', 'UnwantedSoftware', 'Other'
 
-.PARAMETER Status
-    Status of the alert. One of 'New', 'InProgress' and 'Resolved'
-
 .PARAMETER Comment
     A comment to associate to the alert
+
+.PARAMETER Status
+    Status of the alert. One of 'New', 'InProgress' and 'Resolved'
 
 .PARAMETER AlertID
     The identifier of the alert to update
@@ -56,11 +56,11 @@
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $Status,
+        $Comment,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $Comment,
+        $Status,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
@@ -71,12 +71,12 @@
             'Classification' = 'Classification'
             'AssignedTo' = 'Assigned to'
             'Determination' = 'Determination'
-            'Status' = 'Status'
             'Comment' = 'Comment'
+            'Status' = 'Status'
 		}
 
 		$__param = @{
-			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('Classification','AssignedTo','Determination','Status','Comment') -Mapping $__mapping
+			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('Classification','AssignedTo','Determination','Comment','Status') -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'alerts/{AlertID}' -Replace '{AlertID}',$AlertID

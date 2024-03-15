@@ -10,12 +10,12 @@
 	
 	.PARAMETER Service
 		The service for which to retrieve the token.
-		Defaults to: Endpoint
+		Defaults to: *
 	
 	.EXAMPLE
 		PS C:\> Get-DefenderAPIToken
 		
-		Returns the session token of the Endpoint service connection
+		Returns all current session tokens
 	#>
 	
 	[CmdletBinding()]
@@ -23,9 +23,9 @@
 		[PsfArgumentCompleter('DefenderAPI.Service')]
 		[PsfValidateSet(TabCompletion = 'DefenderAPI.Service')]
 		[string]
-		$Service = 'Endpoint'
+		$Service = '*'
 	)
 	process {
-		$script:_DefenderTokens.$Service
+		$script:_DefenderTokens.Values | Where-Object Service -like $Service
 	}
 }

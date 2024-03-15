@@ -168,11 +168,11 @@
 					$scopesToUse = $Scopes
 					if (-not $Scopes) { $scopesToUse = $serviceObject.DefaultScopes }
 
-					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.Browser' -ScriptBlock {
+					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.Browser' -ActionStringValues $serviceName -ScriptBlock {
 						$result = Connect-ServiceBrowser @commonParam -SelectAccount -Scopes $scopesToUse -ErrorAction Stop
 					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
 
-					$token = [DefenderToken]::new($ClientID, $TenantID, $effectiveServiceUrl, $false)
+					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $effectiveServiceUrl, $false)
 					$token.SetTokenMetadata($result)
 					$script:_DefenderTokens[$serviceName] = $token
 				}
@@ -183,11 +183,11 @@
 					$scopesToUse = $Scopes
 					if (-not $Scopes) { $scopesToUse = $serviceObject.DefaultScopes }
 
-					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.DeviceCode' -ScriptBlock {
+					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.DeviceCode' -ActionStringValues $serviceName -ScriptBlock {
 						$result = Connect-ServiceBrowser @commonParam -SelectAccount -Scopes $scopesToUse -ErrorAction Stop
 					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
 
-					$token = [DefenderToken]::new($ClientID, $TenantID, $effectiveServiceUrl, $true)
+					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $effectiveServiceUrl, $true)
 					$token.SetTokenMetadata($result)
 					$script:_DefenderTokens[$serviceName] = $token
 				}
@@ -195,11 +195,11 @@
 
 				#region ROPC
 				UsernamePassword {
-					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.ROPC' -ScriptBlock {
+					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.ROPC' -ActionStringValues $serviceName -ScriptBlock {
 						$result = Connect-ServicePassword @commonParam -Credential $Credential -ErrorAction Stop
 					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
 
-					$token = [DefenderToken]::new($ClientID, $TenantID, $Credential, $effectiveServiceUrl)
+					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $Credential, $effectiveServiceUrl)
 					$token.SetTokenMetadata($result)
 					$script:_DefenderTokens[$serviceName] = $token
 				}
@@ -207,11 +207,11 @@
 
 				#region AppSecret
 				AppSecret {
-					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.ClientSecret' -ScriptBlock {
+					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.ClientSecret' -ActionStringValues $serviceName -ScriptBlock {
 						$result = Connect-ServiceClientSecret @commonParam -ClientSecret $ClientSecret -ErrorAction Stop
 					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
 
-					$token = [DefenderToken]::new($ClientID, $TenantID, $ClientSecret, $effectiveServiceUrl)
+					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $ClientSecret, $effectiveServiceUrl)
 					$token.SetTokenMetadata($result)
 					$script:_DefenderTokens[$serviceName] = $token
 				}
@@ -221,14 +221,14 @@
 				AppCertificate {
 					try { $certificateObject = Resolve-Certificate -BoundParameters $PSBoundParameters }
 					catch {
-						Stop-PSFFunction -String 'Connect-DefenderAPI.Error.CertError' -StringValues $serviceName, $ClientID, $TenantID -Tag connect, fail -ErrorRecord $_ -EnableException $true -Cmdlet $PSCmdlet -Target $serviceName
+						Stop-PSFFunction -String 'Connect-DefenderAPI.Error.CertError' -StringValues $serviceName -Tag connect, fail -ErrorRecord $_ -EnableException $true -Cmdlet $PSCmdlet -Target $serviceName
 					}
 	
-					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.Certificate' -ActionStringValues $certificateObject.Subject, $certificateObject.Thumbprint -ScriptBlock {
+					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.Certificate' -ActionStringValues $serviceName, $certificateObject.Subject, $certificateObject.Thumbprint -ScriptBlock {
 						$result = Connect-ServiceCertificate @commonParam -Certificate $certificateObject -ErrorAction Stop
 					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
 
-					$token = [DefenderToken]::new($ClientID, $TenantID, $certificateObject, $effectiveServiceUrl)
+					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $certificateObject, $effectiveServiceUrl)
 					$token.SetTokenMetadata($result)
 					$script:_DefenderTokens[$serviceName] = $token
 				}

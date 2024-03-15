@@ -8,14 +8,14 @@
 
     Scopes required (delegate auth): Machine.LiveResponse
 
-.PARAMETER CommandIndex
-    The index of the live response command to get the results download URI for
-
 .PARAMETER MachineActionID
     The identifier of the machine action
 
+.PARAMETER CommandIndex
+    The index of the live response command to get the results download URI for
+
 .EXAMPLE
-    PS C:\> Get-MdLiveResponseResultDownloadLink -CommandIndex $commandindex -MachineActionID $machineactionid
+    PS C:\> Get-MdLiveResponseResultDownloadLink -MachineActionID $machineactionid -CommandIndex $commandindex
 
     Get result download URI for a completed live response command
 
@@ -26,11 +26,11 @@
     param (
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $CommandIndex,
+        $MachineActionID,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $MachineActionID
+        $CommandIndex
     )
     process {
 		$__mapping = @{
@@ -41,7 +41,7 @@
 			Body = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
-			Path = 'machineactions/{MachineActionID}/GetLiveResponseResultDownloadLink(index={CommandIndex})' -Replace '{CommandIndex}',$CommandIndex -Replace '{MachineActionID}',$MachineActionID
+			Path = 'machineactions/{MachineActionID}/GetLiveResponseResultDownloadLink(index={CommandIndex})' -Replace '{MachineActionID}',$MachineActionID -Replace '{CommandIndex}',$CommandIndex
 			Method = 'get'
 			RequiredScopes = 'Machine.LiveResponse'
 			

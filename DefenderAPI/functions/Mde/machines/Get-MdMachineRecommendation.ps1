@@ -8,11 +8,11 @@
 
     Scopes required (delegate auth): SecurityRecommendation.Read
 
-.PARAMETER MachineID
-    ID of the machine to get recommendations for.
-
 .PARAMETER Authorization
     
+
+.PARAMETER MachineID
+    ID of the machine to get recommendations for.
 
 .EXAMPLE
     PS C:\> Get-MdMachineRecommendation -Authorization $authorization
@@ -29,14 +29,14 @@
 #>
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetRecommendationById')]
+        [string]
+        $Authorization,
+
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [Alias('Id')]
         [string]
-        $MachineID,
-
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetRecommendationById')]
-        [string]
-        $Authorization
+        $MachineID
     )
     process {
 		$__mapping = @{

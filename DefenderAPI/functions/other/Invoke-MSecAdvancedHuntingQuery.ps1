@@ -1,4 +1,4 @@
-﻿function Invoke-MdeAdvancedHuntingQuery {
+﻿function Invoke-MSecAdvancedHuntingQuery {
 	<#
 	.SYNOPSIS
 		Execute an advanced hunting query.
@@ -9,7 +9,7 @@
 		Requires being connected to the "security" service.
 		To establish a connection, use the "Connect-MdeService" command with the parameter '-Service "security"'
 		Example:
-		Connect-MdeService -Service security -DeviceCode -ClientID $ClientID -TenantID $TenantID
+		Connect-DefenderAPIService -Service security -DeviceCode -ClientID $ClientID -TenantID $TenantID
 		
 		Scopes required (delegate auth): AdvancedHunting.Read
 	
@@ -17,7 +17,7 @@
 		The hunting query to execute.
 	
 	.EXAMPLE
-		PS C:\> Invoke-MdeAdvancedHuntingQuery -Query 'DeviceProcessEvents | where InitiatingProcessFileName =~ \"powershell.exe\" | project Timestamp, FileName, InitiatingProcessFileName | order by Timestamp desc | limit 2'
+		PS C:\> Invoke-MSecAdvancedHuntingQuery -Query 'DeviceProcessEvents | where InitiatingProcessFileName =~ \"powershell.exe\" | project Timestamp, FileName, InitiatingProcessFileName | order by Timestamp desc | limit 2'
 
 		Executes the query, searching for the latest two powershell processes
 	
@@ -39,6 +39,6 @@
 		$__query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 		$__path = 'advancedhunting/run'
 	
-		Invoke-MdeRequest -Service 'security' -Path $__path -Method post -Body $__body -Query $__query -RequiredScopes 'AdvancedHunting.Read' | ConvertFrom-AdvancedQuery
+		Invoke-DefenderAPIRequest -Service 'security' -Path $__path -Method post -Body $__body -Query $__query -RequiredScopes 'AdvancedHunting.Read' | ConvertFrom-AdvancedQuery
 	}
 }

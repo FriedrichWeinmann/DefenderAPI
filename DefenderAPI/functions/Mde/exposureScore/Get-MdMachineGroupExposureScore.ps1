@@ -12,12 +12,12 @@
     
 
 .EXAMPLE
-    PS C:\> Get-MdMachineGroupExposureScore
+    PS C:\> Get-MdMachineGroupExposureScore -Authorization $authorization
 
     <insert description here>
 
 .EXAMPLE
-    PS C:\> Get-MdMachineGroupExposureScore -Authorization $authorization
+    PS C:\> Get-MdMachineGroupExposureScore
 
     <insert description here>
 

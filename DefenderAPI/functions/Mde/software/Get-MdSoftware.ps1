@@ -8,14 +8,14 @@
 
     Scopes required (delegate auth): Software.Read
 
-.PARAMETER SoftwareID
-    ID of the software to retrieve.
-
 .PARAMETER Authorization
     
 
+.PARAMETER SoftwareID
+    ID of the software to retrieve.
+
 .EXAMPLE
-    PS C:\> Get-MdSoftware -Authorization $authorization
+    PS C:\> Get-MdSoftware -Authorization $authorization -SoftwareID $softwareid
 
     <insert description here>
 
@@ -25,7 +25,7 @@
     Lists all security recommendations
 
 .EXAMPLE
-    PS C:\> Get-MdSoftware -SoftwareID $softwareid -Authorization $authorization
+    PS C:\> Get-MdSoftware -Authorization $authorization
 
     <insert description here>
 
@@ -34,15 +34,15 @@
 #>
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetProductById')]
-        [Alias('Id')]
-        [string]
-        $SoftwareID,
-
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = '')]
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetProductById')]
         [string]
-        $Authorization
+        $Authorization,
+
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetProductById')]
+        [Alias('Id')]
+        [string]
+        $SoftwareID
     )
     process {
 		$__mapping = @{

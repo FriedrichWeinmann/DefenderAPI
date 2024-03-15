@@ -97,7 +97,7 @@
 			response_type = 'code'
 			redirect_uri  = $redirectUri
 			response_mode = 'query'
-			scope         = $Scopes -join ' '
+			scope         = $actualScopes -join ' '
 			state         = $state
 		}
 		if ($SelectAccount) {
@@ -108,7 +108,7 @@
 			$pair.Key, ([System.Web.HttpUtility]::UrlEncode($pair.Value)) -join '='
 		}
 		$uriFinal = $uri + ($paramStrings -join '&')
-		Write-Verbose "Authorize Uri: $uriFinal"
+		Write-PSFMessage -Level Verbose -String 'Connect-ServiceBrowser.AuthorizeUri' -StringValues $uriFinal
 
 		$redirectTo = 'https://raw.githubusercontent.com/FriedrichWeinmann/MiniGraph/master/nothing-to-see-here.txt'
 		if ((Get-Random -Minimum 10 -Maximum 99) -eq 66) {
@@ -144,6 +144,12 @@
 
 		if (-not $stateReturn) {
 			Invoke-TerminatingException -Cmdlet $PSCmdlet -Message "Authentication failed (see browser for details)" -Category AuthenticationError
+		}
+
+		if ($stateReturn -match '^error_description=') {
+			$message = $stateReturn -replace '^error_description=' -replace '\+',' '
+			$message = [System.Web.HttpUtility]::UrlDecode($message)
+			Invoke-TerminatingException -Cmdlet $PSCmdlet -Message "Error processing the request: $message" -Category InvalidOperation
 		}
 
 		if ($state -ne $stateReturn.Split("=")[1]) {
