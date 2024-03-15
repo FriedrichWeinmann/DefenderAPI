@@ -1,0 +1,7 @@
+﻿@{
+    globalParameters = @{
+        VulnerabilityID = @{
+            Alias = 'Id'
+        }
+    }
+}

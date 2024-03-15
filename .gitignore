@@ -1,0 +1,21 @@
+﻿
+# ignore the settings folder and files for VSCode and PSS
+*.psproj
+*TempPoint*
+
+# Ignore staging info from Visual Studio
+library/DefenderAPI/.vs/*
+library/DefenderAPI/DefenderAPI/bin/*
+library/DefenderAPI/DefenderAPI/obj/*
+
+# ignore PowerShell Studio MetaData
+DefenderAPI/DefenderAPI.psproj
+DefenderAPI/DefenderAPI.psproj.bak
+DefenderAPI/DefenderAPI.psprojs
+DefenderAPI/DefenderAPI.psproj
+
+# ignore the TestResults
+TestResults/*
+
+# ignore the publishing Directory
+publish/*

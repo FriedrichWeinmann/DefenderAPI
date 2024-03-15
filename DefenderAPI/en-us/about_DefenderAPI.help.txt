@@ -1,0 +1,11 @@
+﻿TOPIC
+	about_DefenderAPI
+	
+SHORT DESCRIPTION
+	Explains how to use the DefenderAPI powershell module
+	
+LONG DESCRIPTION
+	<Insert Content here>
+
+KEYWORDS
+	DefenderAPI

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{B1BDD3EB-32FF-4024-8413-E7A1904C8861}") = "DefenderAPI", "DefenderAPI\DefenderAPI.csproj", "{6CBC5F0C-0BF9-484D-BA55-90E19109E454}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6CBC5F0C-0BF9-484D-BA55-90E19109E454}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CBC5F0C-0BF9-484D-BA55-90E19109E454}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CBC5F0C-0BF9-484D-BA55-90E19109E454}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CBC5F0C-0BF9-484D-BA55-90E19109E454}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {678F2C39-C4E4-4892-9921-B3BA06A0CA54}
+	EndGlobalSection
+EndGlobal

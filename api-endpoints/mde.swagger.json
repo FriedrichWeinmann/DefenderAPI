@@ -1,0 +1,4165 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Windows Defender ATP",
+    "description": "Windows Defender Advanced Threat Protection (ATP) is a unified platform for preventative protection, post-breach detection, automated investigation, and response. Read more about it here: http://aka.ms/wdatp",
+    "x-ms-api-annotation": {
+      "status": "Production"
+    }
+  },
+  "host": "api.securitycenter.windows.com",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/advancedqueries/run": {
+      "post": {
+        "tags": [
+          "AdvancedHunting"
+        ],
+        "summary": "Advanced Hunting",
+        "description": "Run a custom query in Windows Defender ATP",
+        "operationId": "AdvancedHunting",
+        "x-ms-visibility": "important",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Query": {
+                  "type": "string",
+                  "description": "The query to run",
+                  "title": "Query",
+                  "x-ms-visibility": "important"
+                }
+              },
+              "required": [
+                "Query"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Stats": {
+                  "type": "object",
+                  "properties": {
+                    "dataset_statistics": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "table_row_count": {
+                            "type": "integer",
+                            "format": "int32",
+                            "title": "Count",
+                            "description": "The number of results that were returned from the query",
+                            "x-ms-visibility": "important"
+                          }
+                        }
+                      },
+                      "description": "dataset_statistics",
+                      "x-ms-visibility": "internal"
+                    }
+                  },
+                  "description": "Stats",
+                  "x-ms-visibility": "internal"
+                },
+                "Results": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {},
+                    "x-ms-dynamic-schema": {
+                      "operationId": "AdvancedHuntingSchema",
+                      "parameters": {
+                        "Query": {
+                          "parameter": "Query"
+                        }
+                      },
+                      "value-path": ""
+                    },
+                    "x-ms-dynamic-properties": {
+                      "operationId": "AdvancedHuntingSchema",
+                      "parameters": {
+                        "body/Query": {
+                          "parameterReference": "body/Query"
+                        }
+                      },
+                      "itemValuePath": ""
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/advancedqueries/schema": {
+      "post": {
+        "tags": [
+          "AdvancedHunting"
+        ],
+        "summary": "Advanced Hunting Schema",
+        "description": "Gets the schema for a Windows Defender ATP custom query",
+        "operationId": "AdvancedHuntingSchema",
+        "x-ms-visibility": "internal",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Query": {
+                  "type": "string",
+                  "description": "The query to run",
+                  "title": "Query"
+                }
+              },
+              "required": [
+                "Query"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/api/alerts/createAlertByReference": {
+      "post": {
+        "tags": [
+          "Alerts"
+        ],
+        "summary": "Alerts - Create alert",
+        "description": "Create Alert based on specific Event",
+        "operationId": "CreateAlertByReference",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "machineId": {
+                  "type": "string",
+                  "description": "ID of the machine on which the event was identified",
+                  "title": "Machine ID",
+                  "x-ms-visibility": "important"
+                },
+                "reportId": {
+                  "type": "string",
+                  "format": "int32",
+                  "description": "Report Id of the event",
+                  "title": "Report ID",
+                  "x-ms-visibility": "important"
+                },
+                "eventTime": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Time of the event as string, e.g. 2018-08-03T16:45:21.7115183Z",
+                  "title": "Event Time",
+                  "x-ms-visibility": "important"
+                },
+                "severity": {
+                  "type": "string",
+                  "description": "Severity of the alert.",
+                  "title": "Severity",
+                  "x-ms-visibility": "important",
+                  "enum": [
+                    "Low",
+                    "Medium",
+                    "High"
+                  ]
+                },
+                "category": {
+                  "type": "string",
+                  "description": "Category of the alert",
+                  "title": "Category",
+                  "x-ms-visibility": "important",
+                  "enum": [
+                    "General",
+                    "CommandAndControl",
+                    "Collection",
+                    "CredentialAccess",
+                    "DefenseEvasion",
+                    "Discovery",
+                    "Exfiltration",
+                    "Exploit",
+                    "Execution",
+                    "InitialAccess",
+                    "LateralMovement",
+                    "Malware",
+                    "Persistence",
+                    "PrivilegeEscalation",
+                    "Ransomware",
+                    "SuspiciousActivity"
+                  ]
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Title of the Alert",
+                  "title": "Title",
+                  "x-ms-visibility": "important"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of the Alert",
+                  "title": "Description",
+                  "x-ms-visibility": "important"
+                },
+                "recommendedAction": {
+                  "type": "string",
+                  "description": "Recommended action for the Alert",
+                  "title": "Recommended Action",
+                  "x-ms-visibility": "important"
+                }
+              },
+              "required": [
+                "eventTime",
+                "machineId",
+                "reportId",
+                "severity",
+                "category",
+                "title",
+                "description",
+                "recommendedAction"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Alert"
+            }
+          }
+        }
+      }
+    },
+    "/api/alerts": {
+      "get": {
+        "tags": [
+          "Alerts"
+        ],
+        "summary": "Alerts - Get list of alerts",
+        "description": "Retrieve from Windows Defender ATP the most recent alerts",
+        "operationId": "GetAlerts",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expands related entities inline.",
+            "x-ms-summary": "Expands entities",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filters the results, using OData syntax.",
+            "x-ms-summary": "Filters results",
+            "required": false,
+            "x-ms-visibility": "important",
+            "type": "string"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Selects which properties to include in the response, defaults to all.",
+            "x-ms-summary": "Selects properties",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Sorts the results.",
+            "x-ms-summary": "Sorts results",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Returns only the first n results.",
+            "x-ms-summary": "Returns first results",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skips the first n results.",
+            "x-ms-summary": "Skips first results",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$count",
+            "in": "query",
+            "description": "Includes a count of the matching results in the response.",
+            "x-ms-summary": "Includes count",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "@odata.count": {
+                  "type": "integer",
+                  "format": "int32",
+                  "title": "Alerts count",
+                  "description": "The number of available alerts by this query"
+                },
+                "value": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Alert"
+                  },
+                  "title": "Alerts",
+                  "description": "The alerts returned"
+                },
+                "@odata.nextLink": {
+                  "type": "string",
+                  "title": "Next link",
+                  "description": "A link to get the next results in case there are more results than requested"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/alerts/{Alert ID}": {
+      "get": {
+        "tags": [
+          "Alerts"
+        ],
+        "summary": "Alerts - Get single alert",
+        "description": "Retrieve from Windows Defender ATP a specific alert",
+        "operationId": "GetSingleAlert",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Alert ID",
+            "in": "path",
+            "description": "The identifier of the alert to retrieve",
+            "x-ms-summary": "ID of the alert",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "important"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Alert"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Alerts"
+        ],
+        "summary": "Alerts - Update alert",
+        "description": "Update a Windows Defender ATP alert",
+        "operationId": "PatchAlert",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Alert ID",
+            "in": "path",
+            "description": "The identifier of the alert to update",
+            "x-ms-summary": "ID of the alert",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "important"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "description": "Status of the alert. One of 'New', 'InProgress' and 'Resolved'",
+                  "title": "Status",
+                  "x-ms-visibility": "important",
+                  "enum": [
+                    "New",
+                    "InProgress",
+                    "Resolved"
+                  ]
+                },
+                "assignedTo": {
+                  "type": "string",
+                  "description": "Person to assign the alert to",
+                  "title": "Assigned to",
+                  "x-ms-visibility": "important"
+                },
+                "classification": {
+                  "type": "string",
+                  "description": "Classification of the alert. One of 'Unknown', 'FalsePositive', 'TruePositive'",
+                  "title": "Classification",
+                  "x-ms-visibility": "important",
+                  "enum": [
+                    "Unknown",
+                    "FalsePositive",
+                    "TruePositive"
+                  ]
+                },
+                "determination": {
+                  "type": "string",
+                  "description": "The determination of the alert. One of 'NotAvailable', 'Apt', 'Malware', 'SecurityPersonnel', 'SecurityTesting', 'UnwantedSoftware', 'Other'",
+                  "title": "Determination",
+                  "x-ms-visibility": "important",
+                  "enum": [
+                    "NotAvailable",
+                    "Apt",
+                    "Malware",
+                    "SecurityPersonnel",
+                    "SecurityTesting",
+                    "UnwantedSoftware",
+                    "Other"
+                  ]
+                },
+                "comment": {
+                  "type": "string",
+                  "description": "A comment to associate to the alert",
+                  "title": "Comment",
+                  "x-ms-visibility": "important"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Alert"
+            }
+          }
+        }
+      }
+    },
+    "/api/machines/{Machine ID}/startInvestigation": {
+      "post": {
+        "tags": [
+          "Investigation"
+        ],
+        "summary": "Actions - Start automated investigation on a machine",
+        "description": "Start automated investigation on a machine",
+        "operationId": "StartInvestigation",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Machine ID",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The ID of the machine to investigate",
+            "x-ms-summary": "Machine ID",
+            "x-ms-visibility": "important"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Comment": {
+                  "type": "string",
+                  "description": "A comment to associate to the investigation",
+                  "title": "Comment",
+                  "x-ms-visibility": "important"
+                }
+              },
+              "required": [
+                "Comment"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Investigation"
+            }
+          }
+        }
+      }
+    },
+    "/api/machineactions/{Machine Action ID}": {
+      "get": {
+        "tags": [
+          "Machine Actions"
+        ],
+        "summary": "Actions - Get single machine action",
+        "description": "Retrieve from Windows Defender ATP a specific machine action",
+        "operationId": "GetSingleMachineAction",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Machine Action ID",
+            "in": "path",
+            "description": "The identifier of the machine action to retrieve",
+            "x-ms-summary": "ID of the machine action",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "important"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/MachineAction"
+            }
+          }
+        }
+      }
+    },
+    "/api/machineactions/{Machine Action ID}/cancel": {
+      "post": {
+        "tags": [
+          "Machine Actions"
+        ],
+        "summary": "Actions - Cancel a single machine action",
+        "description": "Cancel a specific machine action",
+        "operationId": "CancelSingleMachineAction",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Machine Action ID",
+            "in": "path",
+            "description": "The identifier of the machine action to cancel",
+            "x-ms-summary": "ID of the machine action",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "important"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Comment": {
+                  "type": "string",
+                  "description": "A comment to associate to the machine action cancellation",
+                  "title": "Comment",
+                  "x-ms-visibility": "important"
+                }
+              },
+              "required": [
+                "Comment"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/MachineAction"
+            }
+          }
+        }
+      }
+    },
+    "/api/machineactions/{Machine Action ID}/GetLiveResponseResultDownloadLink(index={Command Index})": {
+      "get": {
+        "tags": [
+          "Machine Actions"
+        ],
+        "summary": "Actions - Get live response command result download URI",
+        "description": "Get result download URI for a completed live response command",
+        "operationId": "GetLiveResponseDownloadLink",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Machine Action ID",
+            "in": "path",
+            "description": "The identifier of the machine action",
+            "x-ms-summary": "ID of the machine action",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "important"
+          },
+          {
+            "name": "Command Index",
+            "in": "path",
+            "description": "The index of the live response command to get the results download URI for",
+            "x-ms-summary": "Index of the live response command",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "x-ms-visibility": "important"
+          }          
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "title": "Download URI",
+                  "description": "The live response command download URI"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machineactions": {
+      "get": {
+        "tags": [
+          "Machine Actions"
+        ],
+        "summary": "Actions - Get list of machine actions",
+        "description": "Retrieve from Windows Defender ATP the most recent machine actions",
+        "operationId": "GetMachineActions",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filters the results, using OData syntax.",
+            "x-ms-summary": "Filters results",
+            "required": false,
+            "x-ms-visibility": "important",
+            "type": "string"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Selects which properties to include in the response, defaults to all.",
+            "x-ms-summary": "Selects properties",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Sorts the results.",
+            "x-ms-summary": "Sorts results",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Returns only the first n results.",
+            "x-ms-summary": "Returns first results",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skips the first n results.",
+            "x-ms-summary": "Skips first results",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$count",
+            "in": "query",
+            "description": "Includes a count of the matching results in the response.",
+            "x-ms-summary": "Includes count",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "@odata.count": {
+                  "type": "integer",
+                  "format": "int32",
+                  "title": "Machine Actions count",
+                  "description": "The number of available machine actions by this query"
+                },
+                "value": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/MachineAction"
+                  },
+                  "title": "Machine Actions",
+                  "description": "The machine actions returned"
+                },
+                "@odata.nextLink": {
+                  "type": "string",
+                  "title": "Next link",
+                  "description": "A link to get the next results in case there are more results than requested"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/investigations/{Investigation ID}": {
+      "get": {
+        "tags": [
+          "Investigations"
+        ],
+        "summary": "Actions - Get single investigation",
+        "description": "Retrieve from Microsoft Defender ATP a specific investigation",
+        "operationId": "GetSingleInvestigation",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Investigation ID",
+            "in": "path",
+            "description": "The identifier of the investigation to retrieve",
+            "x-ms-summary": "ID of the investigation",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "important"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Investigation"
+            }
+          }
+        }
+      }
+    },
+    "/api/investigations": {
+      "get": {
+        "tags": [
+          "Investigations"
+        ],
+        "summary": "Actions - Get list of investigation",
+        "description": "Retrieve from Microsoft Defender ATP the most recent investigations",
+        "operationId": "GetInvestigations",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filters the results, using OData syntax.",
+            "x-ms-summary": "Filters results",
+            "required": false,
+            "x-ms-visibility": "important",
+            "type": "string"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Selects which properties to include in the response, defaults to all.",
+            "x-ms-summary": "Selects properties",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Sorts the results.",
+            "x-ms-summary": "Sorts results",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Returns only the first n results.",
+            "x-ms-summary": "Returns first results",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skips the first n results.",
+            "x-ms-summary": "Skips first results",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$count",
+            "in": "query",
+            "description": "Includes a count of the matching results in the response.",
+            "x-ms-summary": "Includes count",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "@odata.count": {
+                  "type": "integer",
+                  "format": "int32",
+                  "title": "Investigations count",
+                  "description": "The number of available investigations by this query"
+                },
+                "value": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Investigation"
+                  },
+                  "title": "Investigations",
+                  "description": "The investigations returned"
+                },
+                "@odata.nextLink": {
+                  "type": "string",
+                  "title": "Next link",
+                  "description": "A link to get the next results in case there are more results than requested"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machines/{Machine ID}/collectInvestigationPackage": {
+      "post": {
+        "tags": [
+          "Machine Action"
+        ],
+        "summary": "Actions - Collect investigation package",
+        "description": "Collect investigation package from a machine",
+        "operationId": "CollectInvestigationPackage",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Machine ID",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The ID of the machine to collect the investigation from",
+            "x-ms-summary": "Machine ID",
+            "x-ms-visibility": "important"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Comment": {
+                  "type": "string",
+                  "description": "A comment to associate to the collection",
+                  "title": "Comment",
+                  "x-ms-visibility": "important"
+                }
+              },
+              "required": [
+                "Comment"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/MachineAction"
+            }
+          }
+        }
+      }
+    },
+    "/api/machines/{Machine ID}/offboard": {
+      "post": {
+        "tags": [
+          "Machine Action"
+        ],
+        "summary": "Actions - Offboard machine from Microsoft Defender ATP",
+        "description": "Offboard machine from Microsoft Defender ATP",
+        "operationId": "OffboardMachine",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Machine ID",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The ID of the machine to offboard",
+            "x-ms-summary": "Machine ID",
+            "x-ms-visibility": "important"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Comment": {
+                  "type": "string",
+                  "description": "A comment to associate to the offboarding action",
+                  "title": "Comment",
+                  "x-ms-visibility": "important"
+                }
+              },
+              "required": [
+                "Comment"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Investigation"
+            }
+          }
+        }
+      }
+    },
+    "/api/machineactions/{Machine action ID}/getPackageUri": {
+      "get": {
+        "tags": [
+          "Machine Action"
+        ],
+        "summary": "Actions - Get investigation package download URI",
+        "description": "Get a URI that allows downloading of an investigation package",
+        "operationId": "GetInvestigationPackageUri",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Machine action ID",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The ID of the investigation package collection",
+            "x-ms-summary": "Action ID",
+            "x-ms-visibility": "important"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "description": "The investigation package SAS URI",
+                  "title": "Package SAS URI",
+                  "x-ms-visibility": "important"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machines/{Machine ID}/isolate": {
+      "post": {
+        "tags": [
+          "Machine Action"
+        ],
+        "summary": "Actions - Isolate machine",
+        "description": "Isolate a machine from network",
+        "operationId": "IsolateMachine",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Machine ID",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The ID of the machine to isolate",
+            "x-ms-summary": "Machine ID",
+            "x-ms-visibility": "important"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Comment": {
+                  "type": "string",
+                  "description": "A comment to associate to the isolation",
+                  "title": "Comment",
+                  "x-ms-visibility": "important"
+                },
+                "IsolationType": {
+                  "type": "string",
+                  "description": "Type of the isolation. Allowed values are 'Full' (for full isolation) or 'Selective' (to restrict only limited set of applications from accessing the network)",
+                  "title": "Isolation Type",
+                  "x-ms-visibility": "advanced",
+                  "enum": [
+                    "Full",
+                    "Selective"
+                  ],
+                  "default": "Full"
+                }
+              },
+              "required": [
+                "Comment",
+                "IsolationType"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/MachineAction"
+            }
+          }
+        }
+      }
+    },
+    "/api/machines/{Machine ID}/unisolate": {
+      "post": {
+        "tags": [
+          "Machine Action"
+        ],
+        "summary": "Actions - Unisolate machine",
+        "description": "Unisolate a machine from network",
+        "operationId": "UnisolateMachine",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Machine ID",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The ID of the machine to unisolate",
+            "x-ms-summary": "Machine ID",
+            "x-ms-visibility": "important"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Comment": {
+                  "type": "string",
+                  "description": "A comment to associate to the unisolation",
+                  "title": "Comment",
+                  "x-ms-visibility": "important"
+                }
+              },
+              "required": [
+                "Comment"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/MachineAction"
+            }
+          }
+        }
+      }
+    },
+    "/api/machines/{Machine ID}/restrictCodeExecution": {
+      "post": {
+        "tags": [
+          "Machine Action"
+        ],
+        "summary": "Actions - Restrict app execution",
+        "description": "Restrict execution of all applications on the machine except a predefined set",
+        "operationId": "RestrictAppExecution",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Machine ID",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The ID of the machine to restrict",
+            "x-ms-summary": "Machine ID",
+            "x-ms-visibility": "important"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Comment": {
+                  "type": "string",
+                  "description": "A comment to associate to the restriction",
+                  "title": "Comment",
+                  "x-ms-visibility": "important"
+                }
+              },
+              "required": [
+                "Comment"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/MachineAction"
+            }
+          }
+        }
+      }
+    },
+    "/api/machines/{Machine ID}/unrestrictCodeExecution": {
+      "post": {
+        "tags": [
+          "Machine Action"
+        ],
+        "summary": "Actions - Remove app execution restriction",
+        "description": "Enable execution of any application on the machine",
+        "operationId": "UnrestrictAppExecution",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Machine ID",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The ID of the machine to unrestrict",
+            "x-ms-summary": "Machine ID",
+            "x-ms-visibility": "important"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Comment": {
+                  "type": "string",
+                  "description": "A comment to associate to the restriction removal",
+                  "title": "Comment",
+                  "x-ms-visibility": "important"
+                }
+              },
+              "required": [
+                "Comment"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/MachineAction"
+            }
+          }
+        }
+      }
+    },
+    "/api/machines/{Machine ID}/StopAndQuarantineFile": {
+      "post": {
+        "tags": [
+          "Machine Action"
+        ],
+        "summary": "Actions - Stop and quarantine a file",
+        "description": "Stop execution of a file on a machine and delete it.",
+        "operationId": "StopAndQuarantineFile",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Machine ID",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The ID of the machine to unrestrict",
+            "x-ms-summary": "Machine ID",
+            "x-ms-visibility": "important"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Sha1": {
+                  "type": "string",
+                  "description": "Sha1 of the file to stop and quarantine on the machine",
+                  "title": "Comment",
+                  "x-ms-visibility": "important"
+                },
+                "Comment": {
+                  "type": "string",
+                  "description": "A comment to associate to the restriction removal",
+                  "title": "Comment",
+                  "x-ms-visibility": "important"
+                }
+              },
+              "required": [
+                "Sha1",
+                "Comment"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/MachineAction"
+            }
+          }
+        }
+      }
+    },
+    "/api/machines/{Machine ID}/runAntiVirusScan": {
+      "post": {
+        "tags": [
+          "Machine Action"
+        ],
+        "summary": "Actions - Run antivirus scan",
+        "description": "Initiate Windows Defender Antivirus scan on a machine",
+        "operationId": "RunAntivirusScan",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Machine ID",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The ID of the machine to scan",
+            "x-ms-summary": "Machine ID",
+            "x-ms-visibility": "important"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Comment": {
+                  "type": "string",
+                  "description": "A comment to associate to the scan request",
+                  "title": "Comment",
+                  "x-ms-visibility": "important"
+                },
+                "ScanType": {
+                  "type": "string",
+                  "description": "Type of scan to perform. Allowed values are 'Quick' or 'Full'",
+                  "title": "Scan Type",
+                  "x-ms-visibility": "important",
+                  "enum": [
+                    "Quick",
+                    "Full"
+                  ]
+                }
+              },
+              "required": [
+                "Comment",
+                "ScanType"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/MachineAction"
+            }
+          }
+        }
+      }
+    },
+    "/api/machines/{Machine ID}/runliveresponse": {
+      "post": {
+        "tags": [
+          "Machine Action"
+        ],
+        "summary": "Actions - Run live response",
+        "description": "Run live response api commands for a single machine",
+        "operationId": "RunLiveResponse",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Machine ID",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The ID of the machine to run live response session on",
+            "x-ms-summary": "Machine ID",
+            "x-ms-visibility": "important"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Comment": {
+                  "type": "string",
+                  "description": "A comment to associate to the isolation",
+                  "title": "Comment",
+                  "x-ms-visibility": "important"
+                },
+                "Commands": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/LiveResponseCommand"
+                  },
+                  "title": "Commands",
+                  "description": "The live response commands to execute",
+                  "minItems": 1
+                }
+              },
+              "required": [
+                "Comment",
+                "Commands"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/MachineAction"
+            }
+          }
+        }
+      }
+    },
+    "/api/files/{File ID}": {
+      "get": {
+        "tags": [
+          "Files"
+        ],
+        "summary": "Files - Get a single file",
+        "description": "Retrieve from Windows Defender ATP a specific file by identifier Sha1, or Sha256",
+        "operationId": "GetSingleFile",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "File ID",
+            "in": "path",
+            "description": "The file identifier - Sha1, or Sha256",
+            "x-ms-summary": "The file identifier - Sha1, or Sha256",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "important"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/File"
+            }
+          }
+        }
+      }
+    },
+    "/api/files/{File ID}/alerts": {
+      "get": {
+        "tags": [
+          "Files"
+        ],
+        "summary": "Files - Get alerts related to a file",
+        "description": "Retrieve from Windows Defender ATP a collection of alerts related to a given file by identifier Sha1, or Sha256",
+        "operationId": "GetFileAlerts",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "File ID",
+            "in": "path",
+            "description": "The file identifier - Sha1, or Sha256",
+            "x-ms-summary": "The file identifier - Sha1, or Sha256",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "important"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Alert"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/files/{File ID}/machines": {
+      "get": {
+        "tags": [
+          "Files"
+        ],
+        "summary": "Files - Get machines related to a file",
+        "description": "Retrieve from Windows Defender ATP a collection of machines related to a given file by identifier Sha1, or Sha256",
+        "operationId": "GetFileMachines",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "File ID",
+            "in": "path",
+            "description": "The file identifier - Sha1, or Sha256",
+            "x-ms-summary": "The file identifier - Sha1, or Sha256",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "important"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Machine"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/indicators": {
+      "get": {
+        "tags": [
+          "Indicators"
+        ],
+        "summary": "Indicators - Get list of all active indicators",
+        "description": "Retrieve from Windows Defender ATP list of all active indicators",
+        "operationId": "GetActiveIndicators",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filters the results, using OData syntax.",
+            "x-ms-summary": "Filters results",
+            "required": false,
+            "x-ms-visibility": "important",
+            "type": "string"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Selects which properties to include in the response, defaults to all.",
+            "x-ms-summary": "Selects properties",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Sorts the results.",
+            "x-ms-summary": "Sorts results",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Returns only the first n results.",
+            "x-ms-summary": "Returns first results",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skips the first n results.",
+            "x-ms-summary": "Skips first results",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$count",
+            "in": "query",
+            "description": "Includes a count of the matching results in the response.",
+            "x-ms-summary": "Includes count",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Indicator"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Indicators"
+        ],
+        "summary": "Indicators - Submit a new indicator",
+        "description": "Submit a new indicator",
+        "operationId": "SubmitIndicator",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "indicatorValue": {
+                  "type": "string",
+                  "title": "Indicator Value",
+                  "description": "The value of the indicator"
+                },
+                "indicatorType": {
+                  "type": "string",
+                  "title": "Indicator type",
+                  "description": "The type of the indicator",
+                  "enum": [
+                    "FileSha1",
+                    "FileSha256",
+                    "IpAddress",
+                    "DomainName",
+                    "Url",
+                    "WebCategory",
+                    "CertificateThumbprint"
+                  ]
+                },
+                "application": {
+                  "type": "string",
+                  "title": "Application",
+                  "description": "The application associated with the indicator"
+                },
+                "action": {
+                  "type": "string",
+                  "title": "Action",
+                  "description": "The action that will be taken if the indicator will be discovered in the organization",
+                  "enum": [
+                    "Alert",
+                    "AlertAndBlock",
+                    "Allowed",
+                    "Block",
+                    "Warn"
+                  ]
+                },
+                "expirationTime": {
+                  "type": "string",
+                  "title": "Expiration time",
+                  "format": "date-time",
+                  "description": "The expiration time of the indicator"
+                },
+                "severity": {
+                  "type": "string",
+                  "title": "Severity",
+                  "description": "The severity of the indicator",
+                  "enum": [
+                    "Low",
+                    "Medium",
+                    "High",
+                    "Informational"
+                  ]
+                },
+                "title": {
+                  "type": "string",
+                  "title": "Title",
+                  "description": "The indicator title"
+                },
+                "description": {
+                  "type": "string",
+                  "title": "Description",
+                  "description": "The indicator description"
+                },
+                "recommendedActions": {
+                  "type": "string",
+                  "title": "Recommended Actions",
+                  "description": "Recommended actions for the indicator"
+                }
+              },
+              "required": [
+                "indicatorValue",
+                "indicatorType",
+                "action",
+                "title",
+                "description"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/Indicator"
+            }
+          }
+        }
+      }
+    },
+    "/api/indicators/{Indicator ID}": {
+      "delete": {
+        "tags": [
+          "Indicators"
+        ],
+        "summary": "Indicators - Delete a single indicator by id",
+        "description": "Delete a single indicator by indicator id",
+        "operationId": "DeleteIndicator",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Indicator ID",
+            "in": "path",
+            "description": "The identifier of the Indicator to delete",
+            "x-ms-summary": "ID of the indicator",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "important"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/machines": {
+      "get": {
+        "tags": [
+          "Machines"
+        ],
+        "summary": "Machines - Get list of machines",
+        "description": "Retrieve from Windows Defender ATP the most recent machines",
+        "operationId": "GetMachines",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filters the results, using OData syntax.",
+            "x-ms-summary": "Filters results",
+            "required": false,
+            "x-ms-visibility": "important",
+            "type": "string"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Selects which properties to include in the response, defaults to all.",
+            "x-ms-summary": "Selects properties",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Sorts the results.",
+            "x-ms-summary": "Sorts results",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Returns only the first n results.",
+            "x-ms-summary": "Returns first results",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skips the first n results.",
+            "x-ms-summary": "Skips first results",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$count",
+            "in": "query",
+            "description": "Includes a count of the matching results in the response.",
+            "x-ms-summary": "Includes count",
+            "required": false,
+            "x-ms-visibility": "advanced",
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "@odata.count": {
+                  "type": "integer",
+                  "format": "int32",
+                  "title": "Machines count",
+                  "description": "The number of available machines by this query"
+                },
+                "value": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Machine"
+                  },
+                  "title": "Machines",
+                  "description": "The machines returned"
+                },
+                "@odata.nextLink": {
+                  "type": "string",
+                  "title": "Next link",
+                  "description": "A link to get the next results in case there are more results than requested"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machines/{Machine ID}": {
+      "get": {
+        "tags": [
+          "Machines"
+        ],
+        "summary": "Machines - Get single machine",
+        "description": "Retrieve from Windows Defender ATP a specific machine",
+        "operationId": "GetSingleMachine",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Machine ID",
+            "in": "path",
+            "description": "The identifier of the machine to retrieve",
+            "x-ms-summary": "ID of the machine",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "important"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Machine"
+            }
+          }
+        }
+      }
+    },
+    "/api/machines/{Machine ID}/tags": {
+      "post": {
+        "tags": [
+          "Machines"
+        ],
+        "summary": "Machines - Tag machine",
+        "description": "Add or remove a tag to/from a machine",
+        "operationId": "MachineTag",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Machine ID",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The ID of the machine to which the tag should be added or removed",
+            "x-ms-summary": "ID of the machine",
+            "x-ms-visibility": "important"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Value": {
+                  "type": "string",
+                  "description": "The tag to add or remove",
+                  "title": "Value",
+                  "x-ms-visibility": "important"
+                },
+                "Action": {
+                  "type": "string",
+                  "description": "The action to perform. Value should be one of 'Add' (to add a tag) or 'Remove' (to remove a tag)",
+                  "title": "Action",
+                  "x-ms-visibility": "important",
+                  "enum": [
+                    "Add",
+                    "Remove"
+                  ]
+                }
+              },
+              "required": [
+                "Action",
+                "Value"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Machine"
+            }
+          }
+        }
+      }
+    },
+    "/api/machines/{Machine ID}/software": {
+      "get": {
+        "tags": [
+          "Machines"
+        ],
+        "summary": "GetProductsByAssetId",
+        "operationId": "GetProductsByAssetId",
+        "consumes": [],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "application/prs.mock-odata",
+          "text/plain",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "Machine ID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Software"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machines/{Machine ID}/vulnerabilities": {
+      "get": {
+        "tags": [
+          "Machines"
+        ],
+        "summary": "GetVulnerabilitiesByAssetId",
+        "operationId": "GetVulnerabilitiesByAssetId",
+        "consumes": [],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "application/prs.mock-odata",
+          "text/plain",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "Machine ID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Vulnerability"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machines/{Machine ID}/recommendations": {
+      "get": {
+        "tags": [
+          "Machines"
+        ],
+        "summary": "GetRecommendations",
+        "operationId": "GetRecommendations",
+        "consumes": [],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "application/prs.mock-odata",
+          "text/plain",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "Machine ID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Recommendation"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/software": {
+      "get": {
+        "tags": [
+          "Software"
+        ],
+        "summary": "GetAllProducts",
+        "operationId": "GetAllProducts",
+        "consumes": [],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "application/prs.mock-odata",
+          "text/plain",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Software"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/software/{Software ID}": {
+      "get": {
+        "tags": [
+          "Software"
+        ],
+        "summary": "GetProductById",
+        "operationId": "GetProductById",
+        "consumes": [],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "application/prs.mock-odata",
+          "text/plain",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "Software ID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Software"
+            }
+          }
+        }
+      }
+    },
+    "/api/software/{Software ID}/machineReferences": {
+      "get": {
+        "tags": [
+          "Software"
+        ],
+        "summary": "GetAssetsByProductId",
+        "operationId": "GetAssetsByProductId",
+        "consumes": [],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "application/prs.mock-odata",
+          "text/plain",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "Software ID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/MachineRef"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/software/{Software ID}/distribution": {
+      "get": {
+        "tags": [
+          "Software"
+        ],
+        "summary": "GetVersionDistributionByProductId",
+        "operationId": "GetVersionDistributionByProductId",
+        "consumes": [],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "application/prs.mock-odata",
+          "text/plain",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "Software ID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Distribution"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/software/{Software ID}/vulnerabilities": {
+      "get": {
+        "tags": [
+          "Software"
+        ],
+        "summary": "GetVulnerabilitiesByProductId",
+        "operationId": "GetVulnerabilitiesByProductId",
+        "consumes": [],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "application/prs.mock-odata",
+          "text/plain",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "Software ID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Vulnerability"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recommendations": {
+      "get": {
+        "tags": [
+          "Recommendation"
+        ],
+        "summary": "GetAllRecommendations",
+        "operationId": "GetAllRecommendations",
+        "consumes": [],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "application/prs.mock-odata",
+          "text/plain",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Recommendation"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recommendations/{Recommendation ID}": {
+      "get": {
+        "tags": [
+          "Recommendation"
+        ],
+        "summary": "GetRecommendationById",
+        "operationId": "GetRecommendationById",
+        "consumes": [],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "application/prs.mock-odata",
+          "text/plain",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "Recommendation ID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Recommendation"
+            }
+          }
+        }
+      }
+    },
+    "/api/recommendations/{Recommendation ID}/machineReferences": {
+      "get": {
+        "tags": [
+          "Recommendation"
+        ],
+        "summary": "GetRecommendationExposedMachines",
+        "operationId": "GetRecommendationExposedMachines",
+        "consumes": [],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "application/prs.mock-odata",
+          "text/plain",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "Recommendation ID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/MachineRef"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recommendations/{Recommendation ID}/software": {
+      "get": {
+        "tags": [
+          "Recommendation"
+        ],
+        "summary": "GetRecommendationSoftware",
+        "operationId": "GetRecommendationSoftware",
+        "consumes": [],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "application/prs.mock-odata",
+          "text/plain",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "Recommendation ID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Software"
+            }
+          }
+        }
+      }
+    },
+    "/api/recommendations/{Recommendation ID}/vulnerabilities": {
+      "get": {
+        "tags": [
+          "Recommendation"
+        ],
+        "summary": "GetRecommendationVulnerabilities",
+        "operationId": "GetRecommendationVulnerabilities",
+        "consumes": [],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "application/prs.mock-odata",
+          "text/plain",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "Recommendation ID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Vulnerability"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/exposureScore": {
+      "get": {
+        "tags": [
+          "Score"
+        ],
+        "summary": "GetExposureScore",
+        "operationId": "GetExposureScore",
+        "consumes": [],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "application/prs.mock-odata",
+          "text/plain",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Score"
+            }
+          }
+        }
+      }
+    },
+    "/api/exposureScore/byMachineGroups": {
+      "get": {
+        "tags": [
+          "Score"
+        ],
+        "summary": "GetExposureScoreByRbac",
+        "operationId": "GetExposureScoreByRbac",
+        "consumes": [],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "application/prs.mock-odata",
+          "text/plain",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Score"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/configurationScore": {
+      "get": {
+        "tags": [
+          "Score"
+        ],
+        "summary": "GetConfigurationScore",
+        "operationId": "GetConfigurationScore",
+        "consumes": [],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "application/prs.mock-odata",
+          "text/plain",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Score"
+            }
+          }
+        }
+      }
+    },
+    "/api/vulnerabilities": {
+      "get": {
+        "tags": [
+          "Vulnerability"
+        ],
+        "summary": "GetAllVulnerabilities",
+        "operationId": "GetAllVulnerabilities",
+        "consumes": [],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "application/prs.mock-odata",
+          "text/plain",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Vulnerability"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/vulnerabilities/{Vulnerability ID}": {
+      "get": {
+        "tags": [
+          "Vulnerability"
+        ],
+        "summary": "GetVulnerability",
+        "operationId": "GetVulnerability",
+        "consumes": [],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "application/prs.mock-odata",
+          "text/plain",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "Vulnerability ID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Vulnerability"
+            }
+          }
+        }
+      }
+    },
+    "/api/vulnerabilities/{Vulnerability ID}/machineReferences": {
+      "get": {
+        "tags": [
+          "Vulnerability"
+        ],
+        "summary": "GetAssetsByVulnerability",
+        "operationId": "GetAssetsByVulnerability",
+        "consumes": [],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "application/prs.mock-odata",
+          "text/plain",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "Vulnerability ID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/MachineRef"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Alert": {
+      "type": "object",
+      "title": "Alert",
+      "description": "A single alert entity",
+      "properties": {
+        "id": {
+          "description": "Alert identifier",
+          "type": "string",
+          "title": "Alert ID"
+        },
+        "incidentId": {
+          "description": "The ID of the incident",
+          "type": "integer",
+          "format": "int32",
+          "title": "Incident ID"
+        },
+        "investigationId": {
+          "description": "The Id of the investigation",
+          "type": "integer",
+          "format": "int32",
+          "title": "Investigation ID"
+        },
+        "severity": {
+          "description": "Alert severity",
+          "enum": [
+            "Informational",
+            "Low",
+            "Medium",
+            "High"
+          ],
+          "type": "string",
+          "title": "Alert severity"
+        },
+        "status": {
+          "enum": [
+            "Unspecified",
+            "New",
+            "InProgress",
+            "Resolved",
+            "Hidden"
+          ],
+          "type": "string",
+          "title": "Status",
+          "description": "Status of the alert"
+        },
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "Alert description"
+        },
+        "alertCreationTime": {
+          "type": "string",
+          "title": "Alert creation time",
+          "format": "date-time",
+          "description": "The time at which the alert was created"
+        },
+        "category": {
+          "type": "string",
+          "title": "Category",
+          "description": "Alert category"
+        },
+        "title": {
+          "type": "string",
+          "title": "Title",
+          "description": "Alert title"
+        },
+        "threatFamilyName": {
+          "type": "string",
+          "title": "Threat family name",
+          "description": "Threat family name"
+        },
+        "detectionSource": {
+          "type": "string",
+          "title": "Detection source",
+          "description": "Detection source"
+        },
+        "classification": {
+          "enum": [
+            "Unknown",
+            "FalsePositive",
+            "TruePositive"
+          ],
+          "type": "string",
+          "title": "Classification",
+          "description": "Alert classification"
+        },
+        "determination": {
+          "enum": [
+            "NotAvailable",
+            "Apt",
+            "Malware",
+            "SecurityPersonnel",
+            "SecurityTesting",
+            "UnwantedSoftware",
+            "Other"
+          ],
+          "type": "string",
+          "title": "Determination",
+          "description": "Alert determination"
+        },
+        "assignedTo": {
+          "type": "string",
+          "title": "Assigned to",
+          "description": "Person to whom the alert was assigned"
+        },
+        "resolvedTime": {
+          "type": "string",
+          "title": "Resolved time",
+          "description": "The time at which the alert was resolved"
+        },
+        "lastEventTime": {
+          "type": "string",
+          "format": "date-time",
+          "title": "Last event time",
+          "description": "The time of the last event related to the alert"
+        },
+        "firstEventTime": {
+          "type": "string",
+          "format": "date-time",
+          "title": "First event time",
+          "description": "The time of the first event related to the alert"
+        },
+        "machineId": {
+          "type": "string",
+          "title": "Machine ID",
+          "description": "The identifier of the machine related to the alert"
+        },
+        "lastUpdateTime": {
+          "type": "string",
+          "format": "date-time",
+          "title": "Last update time",
+          "description": "The last update time of the alert"
+        },
+        "investigationState": {
+          "enum": [
+            "Unknown",
+            "Terminated",
+            "SuccessfullyRemediated",
+            "Benign",
+            "Failed",
+            "PartiallyRemediated",
+            "Running",
+            "PendingApproval",
+            "PendingResource",
+            "PartiallyInvestigated",
+            "TerminatedByUser",
+            "TerminatedBySystem",
+            "Queued",
+            "InnerFailure",
+            "PreexistingAlert",
+            "UnsupportedOs",
+            "UnsupportedAlertType",
+            "SuppressedAlert"
+          ],
+          "type": "string",
+          "title": "Investigation State",
+          "description": "The current state of the Investigation"
+        },
+        "computerDnsName": {
+          "type": "string",
+          "title": "Computer Dns Name",
+          "description": "The computer name."
+        },
+        "aadTenantId": {
+          "type": "string",
+          "title": "Aad Tenant Id",
+          "description": "The tenant id"
+        }
+      }
+    },
+    "Machine": {
+      "type": "object",
+      "title": "Machine",
+      "description": "A single machine entity",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "Machine ID",
+          "description": "The machine identifier"
+        },
+        "computerDnsName": {
+          "type": "string",
+          "title": "Computer name",
+          "description": "The computer name"
+        },
+        "firstSeen": {
+          "type": "string",
+          "title": "First seen",
+          "format": "date-time",
+          "description": "The time of the first event received by the machine"
+        },
+        "lastSeen": {
+          "type": "string",
+          "title": "Last seen",
+          "format": "date-time",
+          "description": "The time of the last event received by the machine"
+        },
+        "osPlatform": {
+          "type": "string",
+          "title": "OS platform",
+          "description": "The OS platform of the machine"
+        },
+        "osVersion": {
+          "type": "string",
+          "title": "OS version",
+          "description": "The OS version of the machine"
+        },
+        "systemProductName": {
+          "type": "string",
+          "title": "System product name",
+          "format": "date-time",
+          "description": "systemProductName"
+        },
+        "lastIpAddress": {
+          "type": "string",
+          "title": "Last IP address",
+          "description": "The last IP address of the machine"
+        },
+        "lastExternalIpAddress": {
+          "type": "string",
+          "title": "Last external IP address",
+          "description": "The last external IP address of the machine"
+        },
+        "agentVersion": {
+          "type": "string",
+          "title": "Agent version",
+          "description": "The agent version"
+        },
+        "osBuild": {
+          "type": "integer",
+          "title": "OS build",
+          "format": "int32",
+          "description": "The OS build of the machine"
+        },
+        "healthStatus": {
+          "enum": [
+            "Active",
+            "Inactive",
+            "ImpairedCommunication",
+            "NoSensorData",
+            "NoSensorDataImpairedCommunication",
+            "Unknown"
+          ],
+          "type": "string",
+          "title": "Health status",
+          "description": "The health status of the machine"
+        },
+        "isAadJoined": {
+          "type": "boolean",
+          "title": "Is AAD joined",
+          "description": "A flag indicating whether the machine is joined to AAD"
+        },
+        "machineTags": {
+          "type": "array",
+          "title": "Machine tags",
+          "items": {
+            "type": "string"
+          },
+          "description": "The tags associated to the machine"
+        },
+        "rbacGroupId": {
+          "type": "integer",
+          "title": "RBAC group ID",
+          "format": "int32",
+          "description": "The ID of the RBAC group to which the machine belongs"
+        },
+        "rbacGroupName": {
+          "type": "string",
+          "title": "RBAC group name",
+          "description": "The name of the RBAC group to which the machine belongs"
+        },
+        "riskScore": {
+          "enum": [
+            "None",
+            "Low",
+            "Medium",
+            "High"
+          ],
+          "type": "string",
+          "title": "Risk score",
+          "description": "A score indicating how much the machine is at risk"
+        },
+        "aadDeviceId": {
+          "type": "string",
+          "title": "AAD device ID",
+          "description": "aadDeviceId"
+        },
+        "exposureLevel": {
+          "enum": [
+            "Non",
+            "Low",
+            "Medium",
+            "High"
+          ],
+          "type": "string",
+          "title": "Exposure Level",
+          "description": "Exposure level as evaluated by Microsoft Defender ATP."
+        }
+      }
+    },
+    "MachineAction": {
+      "type": "object",
+      "title": "Machine Action",
+      "description": "A single machine action entity",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "Action ID",
+          "description": "The ID of the machine action"
+        },
+        "type": {
+          "enum": [
+            "Unknown",
+            "RequestSample",
+            "RunAntiVirusScan",
+            "Offboard",
+            "CollectInvestigationPackage",
+            "Isolate",
+            "Unisolate",
+            "StopAndQuarantineFile",
+            "RestrictCodeExecution",
+            "UnrestrictCodeExecution",
+            "LiveResponse"
+          ],
+          "type": "string",
+          "title": "Action type",
+          "description": "The type of the action (e.g. 'Isolate', 'CollectInvestigationPackage', ...)"
+        },
+        "scope": {
+          "type": "string",
+          "title": "Scope",
+          "description": "The scope of the action."
+        },
+        "requestor": {
+          "type": "string",
+          "title": "Requestor",
+          "description": "The person that requested the machine action"
+        },
+        "requestorComment": {
+          "type": "string",
+          "title": "Comment",
+          "description": "The comment associated to the machine action"
+        },
+        "status": {
+          "enum": [
+            "Pending",
+            "Cancelled",
+            "TimeOut",
+            "Failed",
+            "InProgress",
+            "Succeeded"
+          ],
+          "type": "string",
+          "title": "Status",
+          "description": "The status of the machine action (e.g., 'InProgress')"
+        },
+        "machineId": {
+          "type": "string",
+          "title": "ID",
+          "description": "The ID of the machine on which the action has been performed"
+        },
+        "creationDateTimeUtc": {
+          "type": "string",
+          "title": "Creation time",
+          "format": "date-time",
+          "description": "The UTC time at which the action has been requested"
+        },
+        "lastUpdateDateTimeUtc": {
+          "type": "string",
+          "title": "Last update time",
+          "format": "date-time",
+          "description": "The last UTC time at which the action has been updated"
+        },
+        "relatedFileInfo": {
+          "type": "object",
+          "properties": {
+            "fileIdentifier": {
+              "type": "string",
+              "title": "File hash",
+              "description": "The hash of the file associated to this action"
+            },
+            "fileIdentifierType": {
+              "type": "string",
+              "title": "File hash type",
+              "description": "The type of the hash of the file associated to this action",
+              "enum": [
+                "Sha1",
+                "Sha256",
+                "Md5"
+              ]
+            }
+          },
+          "description": "relatedFileInfo",
+          "x-ms-visibility": "internal"
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LiveResponseCommandStatus"
+          },
+          "title": "Commands",
+          "description": "Live response machine action commands"
+        }
+      }
+    },
+    "LiveResponseCommandStatus":{
+      "type": "object",
+      "title": "Live Response Machine Action Command",
+      "description": "A single command in Live Response machine action entity",
+      "properties": {
+        "index": {
+          "type": "integer",
+          "title": "Command index",
+          "description": "The index of the command",
+          "format": "int32"
+        },
+        "startTime": {
+          "type": "string",
+          "title": "The command execution start time",
+          "format": "date-time",
+          "description": "The command execution start time UTC"
+        },
+        "endTime": {
+          "type": "string",
+          "title": "The command execution end time",
+          "format": "date-time",
+          "description": "The command execution end time UTC"
+        },
+        "commandStatus": {
+          "enum": [
+            "Executing",
+            "Completed",
+            "Failed",
+            "PendingResource",
+            "Submitted",
+            "Created"
+          ],
+          "type": "string",
+          "title": "Command status",
+          "description": "The status of the command execution (e.g., 'Completed')"
+        },
+        "errors": {
+          "type": "array",
+          "title": "Command errors",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of command execution errors. In case no errors reported this will be an empty list."
+        },
+        "command": {
+          "type": "object",
+          "title": "Command",
+          "description": "The live response command",          
+          "$ref": "#/definitions/LiveResponseCommand"
+        }
+      }
+    },
+    "LiveResponseCommand":{
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "Command type",
+          "description": "The type of the command",
+          "enum": [
+            "GetFile",
+            "RunScript",
+            "PutFile"
+          ]
+        },
+        "params":{
+          "type": "array",
+          "title": "Command params",
+          "description": "List of command parameters.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string",
+                "title": "Command parameter key",
+                "description": "The key of the command parameter",
+                "enum": [
+                  "FileName",
+                  "ScriptName",
+                  "Args",
+                  "Path"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "title": "Command parameter value",
+                "description": "The value of the command parameter"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "Indicator": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "Indicator ID",
+          "description": "The ID of the indicator"
+        },
+        "indicatorValue": {
+          "type": "string",
+          "title": "Indicator Value",
+          "description": "The value of the indicator"
+        },
+        "indicatorType": {
+          "type": "string",
+          "title": "Indicator type",
+          "description": "The type of the indicator",
+          "enum": [
+            "FileSha1",
+            "FileSha256",
+            "IpAddress",
+            "DomainName",
+            "Url",
+            "WebCategory",
+            "CertificateThumbprint"
+          ]
+        },
+        "application": {
+          "type": "string",
+          "title": "Application",
+          "description": "The application associated with the indicator"
+        },
+        "action": {
+          "type": "string",
+          "title": "Action",
+          "description": "The action that will be taken if the indicator will be discovered in the organization",
+          "enum": [
+            "Alert",
+            "AlertAndBlock",
+            "Allowed",
+            "Block",
+            "Warn"
+          ]
+        },
+        "createdBy": {
+          "type": "string",
+          "title": "Created By",
+          "description": "UPN / Application ID"
+        },
+        "lastUpdatedBy": {
+          "type": "string",
+          "title": "Last Updated By",
+          "description": "Identity of the user/application that last updated the indicator"
+        },
+        "creationTimeDateTimeUtc": {
+          "type": "string",
+          "title": "Creation time",
+          "format": "date-time",
+          "description": "The date and time when the indicator was created"
+        },
+        "expirationTime": {
+          "type": "string",
+          "title": "Expiration time",
+          "format": "date-time",
+          "description": "The expiration time of the indicator"
+        },
+        "lastUpdateTime": {
+          "type": "string",
+          "title": "Last update time",
+          "format": "date-time",
+          "description": "The last UTC time at which the indicator has been updated"
+        },
+        "severity": {
+          "type": "string",
+          "title": "Severity",
+          "description": "The severity of the indicator",
+          "enum": [
+            "Low",
+            "Medium",
+            "High",
+            "Informational"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "title": "Title",
+          "description": "The indicator title"
+        },
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "The indicator description"
+        },
+        "recommendedActions": {
+          "type": "string",
+          "title": "Recommended Actions",
+          "description": "Recommended actions for the indicator"
+        },
+        "rbacGroupNames": {
+          "type": "array",
+          "title": "Rbac Group Names",
+          "items": {
+            "type": "string"
+          },
+          "description": "RBAC machine group names where the indicator is exposed and active. Empty list in case it exposed to all machines."
+        },
+        "educateUrl": {
+          "type": "string",
+          "title": "Educate Url",
+          "description": "The indicator educate Url"
+        },
+        "bypassDurationHours": {
+          "type": "integer",
+          "format": "int32",
+          "title": "Bypass Duration Hours",
+          "description": "The indicator bypass duration in hours"
+        },
+        "certificateInfo": {
+          "type": "object",
+          "title": "Certificate Info",
+          "description": "The indicator certificate information",
+          "properties": {
+            "issuer": {
+              "type": "string",
+              "title": "Issuer"
+            },
+            "serial": {
+              "type": "string",
+              "title": "Serial"
+            },
+            "subject": {
+              "type": "string",
+              "title": "Subject"
+            },
+            "sha256": {
+              "type": "string",
+              "title": "Sha256"
+            }
+          }
+        },
+        "warnContext": {
+          "type": "object",
+          "title": "Certificate Info",
+          "description": "The indicator certificate information",
+          "properties": {
+            "educateUrl": {
+              "type": "string",
+              "title": "Educate Url"
+            },
+            "bypassDurationHours": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      }
+    },
+    "File": {
+      "type": "object",
+      "title": "File",
+      "description": "A single file entity",
+      "properties": {
+        "sha1": {
+          "type": "string",
+          "title": "Sha1",
+          "description": "The sha1 of the file"
+        },
+        "sha256": {
+          "type": "string",
+          "title": "Sha256",
+          "description": "The sha256 of the file"
+        },
+        "globalPrevalence": {
+          "format": "int64",
+          "type": "integer",
+          "title": "Global Prevalence",
+          "description": "The file prevalence across organization"
+        },
+        "globalFirstObserved": {
+          "format": "date-time",
+          "type": "string",
+          "title": "Globally First Observed",
+          "description": "The first time the file was observed."
+        },
+        "globalLastObserved": {
+          "format": "date-time",
+          "type": "string",
+          "title": "Globally Last Observed",
+          "description": "The Last time the file was observed."
+        },
+        "size": {
+          "format": "int64",
+          "type": "integer",
+          "title": "File size",
+          "description": "The file size"
+        },
+        "fileType": {
+          "type": "string",
+          "title": "File Type",
+          "description": "The type of the file"
+        },
+        "isPeFile": {
+          "type": "boolean",
+          "title": "Is Pe File",
+          "description": "Whether the file is a portable executable"
+        },
+        "filePublisher": {
+          "type": "string",
+          "title": "File Publisher",
+          "description": "The publisher of the file"
+        },
+        "fileProductName": {
+          "type": "string",
+          "title": "File Product Name",
+          "description": "The product of the file"
+        },
+        "signer": {
+          "type": "string",
+          "title": "File Signer",
+          "description": "The signer of the file"
+        },
+        "issuer": {
+          "type": "string",
+          "title": "File Issuer",
+          "description": "The issuer of the file"
+        },
+        "signerHash": {
+          "type": "string",
+          "title": "File Signer Hash",
+          "description": "The hash of the signing certificate"
+        },
+        "isValidCertificate": {
+          "type": "boolean",
+          "title": "Is Valid Certificate",
+          "description": "Was signing certificate successfully verified by Microsoft Defender ATP agent"
+        },
+        "determinationType": {
+          "type": "string",
+          "title": "Determination Type",
+          "description": "The determination type of the file"
+        },
+        "determinationValue": {
+          "type": "string",
+          "title": "Determination Value",
+          "description": "The determination value of the file"
+        }
+      }
+    },
+    "Investigation": {
+      "type": "object",
+      "title": "Investigation",
+      "description": "A single investigation entity",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "ID",
+          "description": "The ID of the investigation"
+        },
+        "type": {
+          "enum": [
+            "Unknown",
+            "Terminated",
+            "TerminatedByUser",
+            "TerminatedBySystem",
+            "SuccessfullyRemediated",
+            "Benign",
+            "Failed",
+            "PartiallyRemediated",
+            "Running",
+            "PendingApproval",
+            "PendingResource",
+            "PartiallyInvestigated",
+            "Disabled",
+            "Queued",
+            "InnerFailure",
+            "PreexistingAlert",
+            "UnsupportedOs",
+            "UnsupportedAlertType",
+            "SuppressedAlert"
+          ],
+          "type": "string",
+          "title": "Investigation state",
+          "description": "The state of the investigation (e.g. 'Benign', 'Running', etc..)"
+        },
+        "statusDetails": {
+          "type": "string",
+          "title": "Status details",
+          "description": "Details on the status"
+        },
+        "computerDnsName": {
+          "type": "string",
+          "title": "Computer name",
+          "description": "The computer name"
+        },
+        "machineId": {
+          "type": "string",
+          "title": "Machine ID",
+          "description": "The machine ID"
+        },
+        "startTime": {
+          "type": "string",
+          "title": "Start time",
+          "format": "date-time",
+          "description": "The UTC time at which investigation was started"
+        },
+        "endTime": {
+          "type": "string",
+          "title": "End time",
+          "format": "date-time",
+          "description": "The UTC time at which investigation was completed"
+        }
+      }
+    },
+    "Software": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "vendor": {
+          "type": "string"
+        },
+        "Weaknesses": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "publicExploit": {
+          "type": "boolean"
+        },
+        "activeAlert": {
+          "type": "boolean"
+        },
+        "exposedMachines": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "impactScore": {
+          "format": "float",
+          "type": "number"
+        }
+      }
+    },
+    "Vulnerability": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "severity": {
+          "type": "string"
+        },
+        "cvssV3": {
+          "format": "double",
+          "type": "number"
+        },
+        "exposedMachines": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "publishedOn": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "updatedOn": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "publicExploit": {
+          "type": "boolean"
+        },
+        "exploitVerified": {
+          "type": "boolean"
+        },
+        "exploitInKit": {
+          "type": "boolean"
+        },
+        "exploitTypes": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exploitUris": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Score": {
+      "type": "object",
+      "properties": {
+        "score": {
+          "format": "double",
+          "type": "number"
+        },
+        "time": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "rbacGroupName": {
+          "type": "string"
+        },
+        "rbacGroupId": {
+          "format": "int64",
+          "type": "integer"
+        }
+      }
+    },
+    "Recommendation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "productName": {
+          "type": "string"
+        },
+        "recommendationName": {
+          "type": "string"
+        },
+        "Weaknesses": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "vendor": {
+          "type": "string"
+        },
+        "recommendedVersion": {
+          "type": "string"
+        },
+        "recommendationCategory": {
+          "type": "string"
+        },
+        "subCategory": {
+          "type": "string"
+        },
+        "severityScore": {
+          "format": "double",
+          "type": "number"
+        },
+        "publicExploit": {
+          "type": "boolean"
+        },
+        "activeAlert": {
+          "type": "boolean"
+        },
+        "associatedThreats": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "remediationType": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "Active",
+            "Exception"
+          ],
+          "type": "string"
+        },
+        "configScoreImpact": {
+          "format": "double",
+          "type": "number"
+        },
+        "exposureImpact": {
+          "format": "double",
+          "type": "number"
+        },
+        "totalMachineCount": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "exposedMachinesCount": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "nonProductivityImpactedAssets": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "relatedComponent": {
+          "type": "string"
+        }
+      }
+    },
+    "Configuration": {
+      "type": "object",
+      "properties": {
+        "configurationId": {
+          "type": "string"
+        },
+        "configurationImpact": {
+          "format": "double",
+          "type": "number"
+        },
+        "configurationDescription": {
+          "type": "string"
+        },
+        "configurationName": {
+          "type": "string"
+        },
+        "riskDescription": {
+          "type": "string"
+        },
+        "configurationCategory": {
+          "type": "string"
+        },
+        "configurationSubCategory": {
+          "type": "string"
+        },
+        "configurationBenchmarks": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "totalApplicableMachines": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "exposedMachines": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "configurationSecureImpact": {
+          "format": "double",
+          "type": "number"
+        }
+      }
+    },
+    "ConfigurationStatistics": {
+      "type": "object",
+      "properties": {
+        "totalApplicableMachines": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "totalExposedMachines": {
+          "format": "int64",
+          "type": "integer"
+        }
+      }
+    },
+    "MachineRef": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "computerDnsName": {
+          "type": "string"
+        },
+        "osPlatform": {
+          "type": "string"
+        },
+        "rbacGroupName": {
+          "type": "string"
+        },
+        "rbacGroupId": {
+          "format": "int64",
+          "type": "integer"
+        }
+      }
+    },
+    "Distribution": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "installations": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "vulnerabilities": {
+          "format": "int64",
+          "type": "integer"
+        }
+      }
+    }
+  },
+  "parameters": {},
+  "responses": {},
+  "securityDefinitions": {
+    "AAD": {
+      "type": "oauth2",
+      "flow": "implicit",
+      "authorizationUrl": "https://login.windows.net/common/oauth2/authorize",
+      "scopes": {}
+    }
+  },
+  "security": [],
+  "tags": []
+}
