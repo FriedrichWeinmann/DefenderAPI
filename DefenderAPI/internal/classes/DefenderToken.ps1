@@ -16,6 +16,7 @@
 	[string]$ClientID
 	[string]$TenantID
 	[string]$ServiceUrl
+	[Hashtable]$Header = @{}
 	
 	# Workflow: Client Secret
 	[System.Security.SecureString]$ClientSecret
@@ -87,16 +88,19 @@
 
 	[hashtable]GetHeader() {
 		if ($this.ValidUntil -lt (Get-Date).AddMinutes(5)) {
-			$this.RefreshToken()
+			$this.RenewToken()
 		}
 
-		return @{
-			Authorization = "Bearer $($this.AccessToken)"
-			'Content-Type' = 'application/json'
+		$currentHeader = @{}
+		if ($this.Header.Count -gt 0) {
+			$currentHeader = $this.Header.Clone()
 		}
+		$currentHeader.Authorization = "Bearer $($this.AccessToken)"
+
+		return $currentHeader
 	}
 
-	[void]RefreshToken()
+	[void]RenewToken()
 	{
 		$defaultParam = @{
 			ServiceUrl = $this.ServiceUrl
