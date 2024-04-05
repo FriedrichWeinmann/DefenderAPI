@@ -55,7 +55,7 @@ RequiredModules = @(@{ModuleName = 'PSFramework'; ModuleVersion = '1.10.318'; })
 # TypesToProcess = @()
 
 # Format files (.ps1xml) to be loaded when importing this module
-FormatsToProcess = @('xml\DefenderAPI.psd1')
+FormatsToProcess = @('xml\DefenderAPI.Format.ps1xml')
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
 # NestedModules = @()
