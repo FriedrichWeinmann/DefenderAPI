@@ -20,6 +20,9 @@
 		Default scopes to request.
 		Used in interactive delegate flows to provide a good default user experience.
 		Default scopes should usually include common read scenarios.
+
+	.PARAMETER Header
+		Header data to include in each request.
 	
 	.PARAMETER HelpUrl
 		Link for more information about this service.
@@ -48,6 +51,9 @@
 		[string[]]
 		$DefaultScopes = @(),
 
+		[hashtable]
+		$Header = @{},
+
 		[string]
 		$HelpUrl
 	)
@@ -58,6 +64,7 @@
 			ServiceUrl    = $ServiceUrl
 			Resource      = $Resource
 			DefaultScopes = $DefaultScopes
+			Header        = $Header
 			HelpUrl       = $HelpUrl
 		}
 	}

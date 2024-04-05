@@ -177,6 +177,7 @@
 					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
 
 					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $effectiveServiceUrl, $false)
+					if ($serviceObject.Header.Count -gt 0) { $token.Header = $serviceObject.Header.Clone() }
 					$token.SetTokenMetadata($result)
 					$script:_DefenderTokens[$serviceName] = $token
 				}
@@ -188,10 +189,11 @@
 					if (-not $Scopes) { $scopesToUse = $serviceObject.DefaultScopes }
 
 					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.DeviceCode' -ActionStringValues $serviceName -ScriptBlock {
-						$result = Connect-ServiceBrowser @commonParam -SelectAccount -Scopes $scopesToUse -ErrorAction Stop
+						$result = Connect-ServiceDeviceCode @commonParam -Scopes $scopesToUse -ErrorAction Stop
 					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
 
 					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $effectiveServiceUrl, $true)
+					if ($serviceObject.Header.Count -gt 0) { $token.Header = $serviceObject.Header.Clone() }
 					$token.SetTokenMetadata($result)
 					$script:_DefenderTokens[$serviceName] = $token
 				}
@@ -204,6 +206,7 @@
 					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
 
 					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $Credential, $effectiveServiceUrl)
+					if ($serviceObject.Header.Count -gt 0) { $token.Header = $serviceObject.Header.Clone() }
 					$token.SetTokenMetadata($result)
 					$script:_DefenderTokens[$serviceName] = $token
 				}
@@ -216,6 +219,7 @@
 					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
 
 					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $ClientSecret, $effectiveServiceUrl)
+					if ($serviceObject.Header.Count -gt 0) { $token.Header = $serviceObject.Header.Clone() }
 					$token.SetTokenMetadata($result)
 					$script:_DefenderTokens[$serviceName] = $token
 				}
@@ -233,6 +237,7 @@
 					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
 
 					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $certificateObject, $effectiveServiceUrl)
+					if ($serviceObject.Header.Count -gt 0) { $token.Header = $serviceObject.Header.Clone() }
 					$token.SetTokenMetadata($result)
 					$script:_DefenderTokens[$serviceName] = $token
 				}

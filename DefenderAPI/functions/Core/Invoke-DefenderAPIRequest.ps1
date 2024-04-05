@@ -105,7 +105,7 @@
 				if ($_.ErrorDetails.Message) {
 					$details = $_.ErrorDetails.Message | ConvertFrom-Json
 					if ($details.Error.Code -eq 'TooManyRequests') {
-						Write-DefenderMessage -Level Verbose -Message $details.error.message
+						Write-PSFMessage -Level Verbose -Message $details.error.message
 						$delay = 1 + ($details.error.message -replace '^.+ (\d+) .+$','$1' -as [int])
 						if ($delay -gt 5) { Write-PSFMessage -Level Warning -String 'Invoke-DefenderAPIRequest.Query.Throttling' -StringValues $delay }
 						Start-Sleep -Seconds $delay
