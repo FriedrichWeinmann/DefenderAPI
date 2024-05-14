@@ -21,6 +21,12 @@
 		Use an interactive logon in your default browser.
 		This is the default logon experience.
 
+	.PARAMETER BrowserMode
+		How the browser used for authentication is selected.
+		Options:
+		+ Auto (default): Automatically use the default browser.
+		+ PrintLink: The link to open is printed on console and user selects which browser to paste it into (must be used on the same machine)
+
 	.PARAMETER DeviceCode
 		Use the Device Code delegate authentication flow.
 		This will prompt the user to complete login via browser.
@@ -113,6 +119,10 @@
 		[switch]
 		$Browser,
 
+		[ValidateSet('Auto','PrintLink')]
+		[string]
+		$BrowserMode = 'Auto',
+
 		[Parameter(ParameterSetName = 'DeviceCode')]
 		[switch]
 		$DeviceCode,
@@ -145,105 +155,19 @@
 		[PSCredential]
 		$Credential,
 
-		[PsfArgumentCompleter('DefenderAPI.Service')]
-		[PsfValidateSet(TabCompletion = 'DefenderAPI.Service')]
+		[ValidateSet('Endpoint', 'Security')]
 		[string[]]
 		$Service = 'Endpoint',
 
 		[string]
 		$ServiceUrl
 	)
-	process {
-		foreach ($serviceName in $Service) {
-			$serviceObject = Get-DefenderAPIService -Name $serviceName
-
-			$commonParam = @{
-				ClientID = $ClientID
-				TenantID = $TenantID
-				Resource = $serviceObject.Resource
-			}
-			$effectiveServiceUrl = $ServiceUrl
-			if (-not $ServiceUrl) { $effectiveServiceUrl = $serviceObject.ServiceUrl }
-			
-			#region Connection
-			switch ($PSCmdlet.ParameterSetName) {
-				#region Browser
-				Browser {
-					$scopesToUse = $Scopes
-					if (-not $Scopes) { $scopesToUse = $serviceObject.DefaultScopes }
-
-					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.Browser' -ActionStringValues $serviceName -ScriptBlock {
-						$result = Connect-ServiceBrowser @commonParam -SelectAccount -Scopes $scopesToUse -ErrorAction Stop
-					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
-
-					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $effectiveServiceUrl, $false)
-					if ($serviceObject.Header.Count -gt 0) { $token.Header = $serviceObject.Header.Clone() }
-					$token.SetTokenMetadata($result)
-					$script:_DefenderTokens[$serviceName] = $token
-				}
-				#endregion Browser
-
-				#region DeviceCode
-				DeviceCode {
-					$scopesToUse = $Scopes
-					if (-not $Scopes) { $scopesToUse = $serviceObject.DefaultScopes }
-
-					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.DeviceCode' -ActionStringValues $serviceName -ScriptBlock {
-						$result = Connect-ServiceDeviceCode @commonParam -Scopes $scopesToUse -ErrorAction Stop
-					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
-
-					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $effectiveServiceUrl, $true)
-					if ($serviceObject.Header.Count -gt 0) { $token.Header = $serviceObject.Header.Clone() }
-					$token.SetTokenMetadata($result)
-					$script:_DefenderTokens[$serviceName] = $token
-				}
-				#endregion DeviceCode
-
-				#region ROPC
-				UsernamePassword {
-					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.ROPC' -ActionStringValues $serviceName -ScriptBlock {
-						$result = Connect-ServicePassword @commonParam -Credential $Credential -ErrorAction Stop
-					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
-
-					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $Credential, $effectiveServiceUrl)
-					if ($serviceObject.Header.Count -gt 0) { $token.Header = $serviceObject.Header.Clone() }
-					$token.SetTokenMetadata($result)
-					$script:_DefenderTokens[$serviceName] = $token
-				}
-				#endregion ROPC
-
-				#region AppSecret
-				AppSecret {
-					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.ClientSecret' -ActionStringValues $serviceName -ScriptBlock {
-						$result = Connect-ServiceClientSecret @commonParam -ClientSecret $ClientSecret -ErrorAction Stop
-					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
-
-					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $ClientSecret, $effectiveServiceUrl)
-					if ($serviceObject.Header.Count -gt 0) { $token.Header = $serviceObject.Header.Clone() }
-					$token.SetTokenMetadata($result)
-					$script:_DefenderTokens[$serviceName] = $token
-				}
-				#endregion AppSecret
-
-				#region AppCertificate
-				AppCertificate {
-					try { $certificateObject = Resolve-Certificate -BoundParameters $PSBoundParameters }
-					catch {
-						Stop-PSFFunction -String 'Connect-DefenderAPI.Error.CertError' -StringValues $serviceName -Tag connect, fail -ErrorRecord $_ -EnableException $true -Cmdlet $PSCmdlet -Target $serviceName
-					}
 	
-					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.Certificate' -ActionStringValues $serviceName, $certificateObject.Subject, $certificateObject.Thumbprint -ScriptBlock {
-						$result = Connect-ServiceCertificate @commonParam -Certificate $certificateObject -ErrorAction Stop
-					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
+	process {
+		$actualServiceNames = foreach ($serviceName in $Service) { "DefenderAPI.$serviceName" }
 
-					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $certificateObject, $effectiveServiceUrl)
-					if ($serviceObject.Header.Count -gt 0) { $token.Header = $serviceObject.Header.Clone() }
-					$token.SetTokenMetadata($result)
-					$script:_DefenderTokens[$serviceName] = $token
-				}
-				#endregion AppCertificate
-			}
-			#endregion Connection
-		}
+		$param = $PSBoundParameters | ConvertTo-PSFHashtable
+		$param.Service = $actualServiceNames
+		Connect-EntraService @param
 	}
 }

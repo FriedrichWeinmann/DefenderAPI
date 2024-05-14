@@ -8,23 +8,23 @@
 
     Scopes required (delegate auth): Alert.ReadWrite
 
-.PARAMETER AlertID
-    The identifier of the alert to update
-
 .PARAMETER Comment
     A comment to associate to the alert
 
-.PARAMETER Classification
-    Classification of the alert. One of 'Unknown', 'FalsePositive', 'TruePositive'
+.PARAMETER AssignedTo
+    Person to assign the alert to
 
 .PARAMETER Status
     Status of the alert. One of 'New', 'InProgress' and 'Resolved'
 
+.PARAMETER Classification
+    Classification of the alert. One of 'Unknown', 'FalsePositive', 'TruePositive'
+
+.PARAMETER AlertID
+    The identifier of the alert to update
+
 .PARAMETER Determination
     The determination of the alert. One of 'NotAvailable', 'Apt', 'Malware', 'SecurityPersonnel', 'SecurityTesting', 'UnwantedSoftware', 'Other'
-
-.PARAMETER AssignedTo
-    Person to assign the alert to
 
 .PARAMETER Confirm
 	If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
@@ -42,17 +42,13 @@
 #>
     [CmdletBinding(DefaultParameterSetName = 'default', SupportsShouldProcess = $true)]
     param (
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [string]
-        $AlertID,
-
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
         $Comment,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $Classification,
+        $AssignedTo,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
@@ -60,34 +56,38 @@
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $Determination,
+        $Classification,
+
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [string]
+        $AlertID,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $AssignedTo
+        $Determination
     )
     process {
 		$__mapping = @{
             'Comment' = 'Comment'
-            'Classification' = 'Classification'
-            'Status' = 'Status'
-            'Determination' = 'Determination'
             'AssignedTo' = 'Assigned to'
+            'Status' = 'Status'
+            'Classification' = 'Classification'
+            'Determination' = 'Determination'
 		}
 
 		$__param = @{
-			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('Comment','Classification','Status','Determination','AssignedTo') -Mapping $__mapping
+			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('Comment','AssignedTo','Status','Classification','Determination') -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'alerts/{AlertID}' -Replace '{AlertID}',$AlertID
 			Method = 'patch'
 			RequiredScopes = 'Alert.ReadWrite'
-			
+			Service = 'DefenderAPI.Endpoint'
 		}
 		
 		$__param += $PSBoundParameters | ConvertTo-HashTable -Include 'ErrorAction', 'WarningAction', 'Verbose'
         if (-not $PSCmdlet.ShouldProcess("$AlertID","Update existing Alert")) { return }
-		try { Invoke-DefenderAPIRequest @__param }
+		try { Invoke-EntraRequest @__param }
 		catch { $PSCmdlet.ThrowTerminatingError($_) }
     }
 }

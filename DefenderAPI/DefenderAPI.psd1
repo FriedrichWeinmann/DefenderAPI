@@ -43,10 +43,8 @@ PowerShellVersion = '5.1'
 # ProcessorArchitecture = ''
 
 # Modules that must be imported into the global environment prior to importing this module
-RequiredModules = @(
-	@{ModuleName = 'PSFramework'; ModuleVersion = '1.10.318'; }
-	@{ModuleName = 'EntraAuth'; ModuleVersion = '1.0.4' }
-)
+RequiredModules = @(@{ModuleName = 'PSFramework'; ModuleVersion = '1.10.318'; }, 
+               @{ModuleName = 'EntraAuth'; ModuleVersion = '1.0.4'; })
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()
@@ -58,21 +56,18 @@ RequiredModules = @(
 # TypesToProcess = @()
 
 # Format files (.ps1xml) to be loaded when importing this module
-FormatsToProcess = @('xml\DefenderAPI.Format.ps1xml')
+FormatsToProcess = 'xml\DefenderAPI.Format.ps1xml'
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = 'Assert-DefenderAPIConnection', 'Connect-DefenderAPI', 
-               'Get-DefenderAPIService', 'Get-DefenderAPIToken', 
-               'Register-DefenderAPIService', 'Set-DefenderAPIService', 
-               'Invoke-DefenderAPIRequest', 'Invoke-MdAdvancedQuery', 
-               'Set-MdAdvancedQuerySchema', 'Get-MdAlert', 'New-MdAlert', 
-               'Set-MdAlert', 'Get-MdDeviceSecureScore', 'Get-MdExposureScore', 
-               'Get-MdMachineGroupExposureScore', 'Get-MdFile', 'Get-MdFileAlert', 
-               'Get-MdFileMachine', 'Get-MdIndicator', 'New-MdIndicator', 
-               'Remove-MdIndicator', 'Get-MdInvestigation', 
+               'Invoke-MdAdvancedQuery', 'Set-MdAdvancedQuerySchema', 'Get-MdAlert', 
+               'New-MdAlert', 'Set-MdAlert', 'Get-MdDeviceSecureScore', 
+               'Get-MdExposureScore', 'Get-MdMachineGroupExposureScore', 
+               'Get-MdFile', 'Get-MdFileAlert', 'Get-MdFileMachine', 'Get-MdIndicator', 
+               'New-MdIndicator', 'Remove-MdIndicator', 'Get-MdInvestigation', 
                'Get-MdLiveResponseResultDownloadLink', 'Get-MdMachineAction', 
                'Get-MdMachineactionGetpackageuri', 'Set-MdMachineactionCancel', 
                'Disable-MdMachineIsolation', 'Enable-MdMachineIsolation', 
@@ -115,7 +110,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = @('defender','api','entra','mde','endpoint')
+        Tags = 'defender','api','entra','mde','endpoint'
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/FriedrichWeinmann/DefenderAPI/blob/master/LICENSE'
@@ -140,7 +135,7 @@ PrivateData = @{
 
     } # End of PSData hashtable
 
-} # End of PrivateData hashtable
+ } # End of PrivateData hashtable
 
 # HelpInfo URI of this module
 # HelpInfoURI = ''

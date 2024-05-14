@@ -35,12 +35,12 @@
 			Path = 'files/{FileID}' -Replace '{FileID}',$FileID
 			Method = 'get'
 			
-			
+			Service = 'DefenderAPI.Endpoint'
 		}
 		
 		$__param += $PSBoundParameters | ConvertTo-HashTable -Include 'ErrorAction', 'WarningAction', 'Verbose'
 
-		try { Invoke-DefenderAPIRequest @__param }
+		try { Invoke-EntraRequest @__param }
 		catch { $PSCmdlet.ThrowTerminatingError($_) }
     }
 }

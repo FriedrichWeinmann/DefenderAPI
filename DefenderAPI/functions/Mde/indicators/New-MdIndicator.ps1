@@ -8,29 +8,29 @@
 
     Scopes required (delegate auth): Ti.ReadWrite
 
-.PARAMETER Title
-    The indicator title
-
 .PARAMETER IndicatorType
     The type of the indicator
 
-.PARAMETER Description
-    The indicator description
+.PARAMETER Title
+    The indicator title
 
 .PARAMETER ExpirationTime
     The expiration time of the indicator
 
-.PARAMETER IndicatorValue
-    The value of the indicator
+.PARAMETER Application
+    The application associated with the indicator
 
 .PARAMETER Severity
     The severity of the indicator
 
-.PARAMETER Application
-    The application associated with the indicator
-
 .PARAMETER RecommendedActions
     Recommended actions for the indicator
+
+.PARAMETER IndicatorValue
+    The value of the indicator
+
+.PARAMETER Description
+    The indicator description
 
 .PARAMETER Action
     The action that will be taken if the indicator will be discovered in the organization
@@ -46,17 +46,13 @@
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [string]
-        $Title,
-
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
         $IndicatorType,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $Description,
+        $Title,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
@@ -64,7 +60,7 @@
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $IndicatorValue,
+        $Application,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
@@ -72,11 +68,15 @@
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $Application,
+        $RecommendedActions,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
-        $RecommendedActions,
+        $IndicatorValue,
+
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [string]
+        $Description,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
@@ -84,30 +84,30 @@
     )
     process {
 		$__mapping = @{
-            'Title' = 'Title'
             'IndicatorType' = 'Indicator type'
-            'Description' = 'Description'
+            'Title' = 'Title'
             'ExpirationTime' = 'Expiration time'
-            'IndicatorValue' = 'Indicator Value'
-            'Severity' = 'Severity'
             'Application' = 'Application'
+            'Severity' = 'Severity'
             'RecommendedActions' = 'Recommended Actions'
+            'IndicatorValue' = 'Indicator Value'
+            'Description' = 'Description'
             'Action' = 'Action'
 		}
 
 		$__param = @{
-			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('Title','IndicatorType','Description','ExpirationTime','IndicatorValue','Severity','Application','RecommendedActions','Action') -Mapping $__mapping
+			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('IndicatorType','Title','ExpirationTime','Application','Severity','RecommendedActions','IndicatorValue','Description','Action') -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'indicators'
 			Method = 'post'
 			RequiredScopes = 'Ti.ReadWrite'
-			
+			Service = 'DefenderAPI.Endpoint'
 		}
 		
 		$__param += $PSBoundParameters | ConvertTo-HashTable -Include 'ErrorAction', 'WarningAction', 'Verbose'
 
-		try { Invoke-DefenderAPIRequest @__param }
+		try { Invoke-EntraRequest @__param }
 		catch { $PSCmdlet.ThrowTerminatingError($_) }
     }
 }

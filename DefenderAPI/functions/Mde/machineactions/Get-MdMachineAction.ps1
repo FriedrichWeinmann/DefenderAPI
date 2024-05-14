@@ -17,17 +17,17 @@
 .PARAMETER Select
     Selects which properties to include in the response, defaults to all.
 
-.PARAMETER Skip
-    Skips the first n results.
+.PARAMETER Filter
+    Filters the results, using OData syntax.
 
 .PARAMETER MachineActionID
     The identifier of the machine action to retrieve
 
-.PARAMETER Filter
-    Filters the results, using OData syntax.
-
 .PARAMETER Count
     Includes a count of the matching results in the response.
+
+.PARAMETER Skip
+    Skips the first n results.
 
 .EXAMPLE
     PS C:\> Get-MdMachineAction -MachineActionID $machineactionid
@@ -57,44 +57,44 @@
         $Select,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [int32]
-        $Skip,
+        [string]
+        $Filter,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'GetSingleMachineAction')]
         [string]
         $MachineActionID,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [string]
-        $Filter,
+        [boolean]
+        $Count,
 
         [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [boolean]
-        $Count
+        [int32]
+        $Skip
     )
     process {
 		$__mapping = @{
             'Top' = '$top'
             'Orderby' = '$orderby'
             'Select' = '$select'
-            'Skip' = '$skip'
             'Filter' = '$filter'
             'Count' = '$count'
+            'Skip' = '$skip'
 		}
 
 		$__param = @{
 			Body = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
-			Query = $PSBoundParameters | ConvertTo-HashTable -Include @('Top','Orderby','Select','Skip','Filter','Count') -Mapping $__mapping
+			Query = $PSBoundParameters | ConvertTo-HashTable -Include @('Top','Orderby','Select','Filter','Count','Skip') -Mapping $__mapping
 			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'machineactions'
 			Method = 'get'
 			RequiredScopes = 'Machine.Read'
-			
+			Service = 'DefenderAPI.Endpoint'
 		}
 		if ($MachineActionID) { $__param.Path += "/$MachineActionID" }
 		$__param += $PSBoundParameters | ConvertTo-HashTable -Include 'ErrorAction', 'WarningAction', 'Verbose'
 
-		try { Invoke-DefenderAPIRequest @__param }
+		try { Invoke-EntraRequest @__param }
 		catch { $PSCmdlet.ThrowTerminatingError($_) }
     }
 }

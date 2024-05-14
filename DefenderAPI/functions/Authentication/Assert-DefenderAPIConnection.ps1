@@ -38,9 +38,17 @@
 		$RequiredScopes
 	)
 	
+	begin {
+		$serviceMap = @{
+			Endpoint = 'DefenderAPI.Endpoint'
+			Security = 'DefenderAPI.Security'
+		}
+	}
 	process
 	{
-		if ($script:_DefenderTokens["$Service"]) { return }
+		$actualServiceName = $Service
+		if ($serviceMap[$Service]) { $actualServiceName = $serviceMap[$Service] }
+		if (Get-EntraToken -Service $actualServiceName) { return }
 		
 		$message = "Not connected yet! Use Connect-DefenderAPIService to establish a connection to '$Service' first."
 		if ($RequiredScopes) { $message = $message + " Scopes required for this call: $($RequiredScopes -join ', ')"}

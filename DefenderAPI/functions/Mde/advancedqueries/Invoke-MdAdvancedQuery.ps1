@@ -37,12 +37,12 @@
 			Path = 'advancedqueries/run'
 			Method = 'post'
 			RequiredScopes = 'AdvancedQuery.Read'
-			
+			Service = 'DefenderAPI.Endpoint'
 		}
 		
 		$__param += $PSBoundParameters | ConvertTo-HashTable -Include 'ErrorAction', 'WarningAction', 'Verbose'
 
-		try { Invoke-DefenderAPIRequest @__param | ConvertFrom-AdvancedQuery }
+		try { Invoke-EntraRequest @__param | ConvertFrom-AdvancedQuery }
 		catch { $PSCmdlet.ThrowTerminatingError($_) }
     }
 }

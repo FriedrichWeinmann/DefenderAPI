@@ -44,12 +44,12 @@
 			Path = 'machineactions/{MachineActionID}/GetLiveResponseResultDownloadLink(index={CommandIndex})' -Replace '{MachineActionID}',$MachineActionID -Replace '{CommandIndex}',$CommandIndex
 			Method = 'get'
 			RequiredScopes = 'Machine.LiveResponse'
-			
+			Service = 'DefenderAPI.Endpoint'
 		}
 		
 		$__param += $PSBoundParameters | ConvertTo-HashTable -Include 'ErrorAction', 'WarningAction', 'Verbose'
 
-		try { Invoke-DefenderAPIRequest @__param }
+		try { Invoke-EntraRequest @__param }
 		catch { $PSCmdlet.ThrowTerminatingError($_) }
     }
 }

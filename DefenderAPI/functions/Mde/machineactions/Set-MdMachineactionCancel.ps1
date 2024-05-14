@@ -43,12 +43,12 @@
 			Path = 'machineactions/{MachineActionID}/cancel' -Replace '{MachineActionID}',$MachineActionID
 			Method = 'post'
 			
-			
+			Service = 'DefenderAPI.Endpoint'
 		}
 		
 		$__param += $PSBoundParameters | ConvertTo-HashTable -Include 'ErrorAction', 'WarningAction', 'Verbose'
 
-		try { Invoke-DefenderAPIRequest @__param }
+		try { Invoke-EntraRequest @__param }
 		catch { $PSCmdlet.ThrowTerminatingError($_) }
     }
 }
