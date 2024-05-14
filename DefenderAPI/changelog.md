@@ -1,5 +1,9 @@
 ﻿# Changelog
 
+## ???
+
++ Upd: Migrated authentication to use external module "EntraAuth"
+
 ## 0.8.5 (2024-04-05)
 
 + Upd: Register-DefenderAPIService - Header Information on tokens is now configurable.
