@@ -63,11 +63,13 @@ FormatsToProcess = 'xml\DefenderAPI.Format.ps1xml'
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = 'Assert-DefenderAPIConnection', 'Connect-DefenderAPI', 
-               'Invoke-MdAdvancedQuery', 'Set-MdAdvancedQuerySchema', 'Get-MdAlert', 
-               'New-MdAlert', 'Set-MdAlert', 'Get-MdDeviceSecureScore', 
-               'Get-MdExposureScore', 'Get-MdMachineGroupExposureScore', 
-               'Get-MdFile', 'Get-MdFileAlert', 'Get-MdFileMachine', 'Get-MdIndicator', 
-               'New-MdIndicator', 'Remove-MdIndicator', 'Get-MdInvestigation', 
+               'Get-MdcaAlert', 'Get-MdcaFile', 'Get-MdcaSubnet', 'New-MdcaSubnet', 
+               'Remove-MdcaSubnet', 'Set-MdcaSubnet', 'Invoke-MdAdvancedQuery', 
+               'Set-MdAdvancedQuerySchema', 'Get-MdAlert', 'New-MdAlert', 
+               'Set-MdAlert', 'Get-MdDeviceSecureScore', 'Get-MdExposureScore', 
+               'Get-MdMachineGroupExposureScore', 'Get-MdFile', 'Get-MdFileAlert', 
+               'Get-MdFileMachine', 'Get-MdIndicator', 'New-MdIndicator', 
+               'Remove-MdIndicator', 'Get-MdInvestigation', 
                'Get-MdLiveResponseResultDownloadLink', 'Get-MdMachineAction', 
                'Get-MdMachineactionGetpackageuri', 'Set-MdMachineactionCancel', 
                'Disable-MdMachineIsolation', 'Enable-MdMachineIsolation', 

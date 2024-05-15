@@ -104,14 +104,27 @@
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
 	[CmdletBinding(DefaultParameterSetName = 'Browser')]
 	param (
-		[Parameter(Mandatory = $true)]
+		[Parameter(Mandatory = $true, ParameterSetName = 'Browser')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'DeviceCode')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'AppCertificate')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'AppSecret')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'UsernamePassword')]
 		[string]
 		$ClientID,
 		
-		[Parameter(Mandatory = $true)]
+		[Parameter(Mandatory = $true, ParameterSetName = 'Browser')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'DeviceCode')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'AppCertificate')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'AppSecret')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'UsernamePassword')]
 		[string]
 		$TenantID,
 		
+		[Parameter(ParameterSetName = 'Browser')]
+		[Parameter(ParameterSetName = 'DeviceCode')]
+		[Parameter(ParameterSetName = 'AppCertificate')]
+		[Parameter(ParameterSetName = 'AppSecret')]
+		[Parameter(ParameterSetName = 'UsernamePassword')]
 		[string[]]
 		$Scopes,
 
@@ -119,6 +132,7 @@
 		[switch]
 		$Browser,
 
+		[Parameter(ParameterSetName = 'Browser')]
 		[ValidateSet('Auto','PrintLink')]
 		[string]
 		$BrowserMode = 'Auto',
@@ -155,18 +169,63 @@
 		[PSCredential]
 		$Credential,
 
-		[ValidateSet('Endpoint', 'Security')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'MdcaLegacyToken')]
+		[securestring]
+		$MdcaToken,
+
+		[Parameter(ParameterSetName = 'Browser')]
+		[Parameter(ParameterSetName = 'DeviceCode')]
+		[Parameter(ParameterSetName = 'AppCertificate')]
+		[Parameter(ParameterSetName = 'AppSecret')]
+		[Parameter(ParameterSetName = 'UsernamePassword')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'MdcaLegacyToken')]
+		[string]
+		$TenantName,
+
+		[Parameter(ParameterSetName = 'Browser')]
+		[Parameter(ParameterSetName = 'DeviceCode')]
+		[Parameter(ParameterSetName = 'AppCertificate')]
+		[Parameter(ParameterSetName = 'AppSecret')]
+		[Parameter(ParameterSetName = 'UsernamePassword')]
+		[ValidateSet('Endpoint', 'Security', 'MDCA')]
 		[string[]]
 		$Service = 'Endpoint',
 
+		[Parameter(ParameterSetName = 'Browser')]
+		[Parameter(ParameterSetName = 'DeviceCode')]
+		[Parameter(ParameterSetName = 'AppCertificate')]
+		[Parameter(ParameterSetName = 'AppSecret')]
+		[Parameter(ParameterSetName = 'UsernamePassword')]
 		[string]
 		$ServiceUrl
 	)
 	
+	begin {
+		if ($Service -contains 'MDCA' -and -not $TenantName) {
+			Stop-PSFFunction -String 'Connect-DefenderAPI.Error.MdcaNoTenant' -EnableException $true -Cmdlet $PSCmdlet
+		}
+
+		if ($Service -contains 'MDCA' -or $MdcaToken) {
+			$param = @{
+				Name          = 'DefenderAPI.MDCA'
+				ServiceUrl    = "https://$TenantName.portal.cloudappsecurity.com/api/v1"
+				Resource      = '05a65629-4c1b-48c1-a78b-804c4abdd4af'
+				DefaultScopes = @()
+				Header        = @{ 'content-type' = 'application/json' }
+				HelpUrl       = 'https://learn.microsoft.com/en-us/defender-cloud-apps/api-introduction'
+			}
+			Register-EntraService @param
+		}
+	}
 	process {
 		$actualServiceNames = foreach ($serviceName in $Service) { "DefenderAPI.$serviceName" }
 
-		$param = $PSBoundParameters | ConvertTo-PSFHashtable
+		if ($MdcaToken) {
+			Set-MdcaToken -Token $MdcaToken -TenantName $TenantName
+			return
+		}
+
+		$param = $PSBoundParameters | ConvertTo-PSFHashtable -ReferenceCommand Connect-EntraService
 		$param.Service = $actualServiceNames
 		Connect-EntraService @param
 	}

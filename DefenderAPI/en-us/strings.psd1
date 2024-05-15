@@ -1,14 +1,14 @@
 ﻿# This is where the strings go, that are written by
 # Write-PSFMessage, Stop-PSFFunction or the PSFramework validation scriptblocks
 @{
-	'Connect-DefenderAPI.Connect.Browser'         = 'Connecting to {0} via Browser' # $serviceName
-	'Connect-DefenderAPI.Connect.Certificate'     = 'Connection to {0} via certificate {1} ({2})' # $serviceName, $certificateObject.Subject, $certificateObject.Thumbprint
-	'Connect-DefenderAPI.Connect.ClientSecret'    = 'Connecting to {0} via ClientSecret' # $serviceName
-	'Connect-DefenderAPI.Connect.DeviceCode'      = 'Connecting to {0} via DeviceCode' # $serviceName
-	'Connect-DefenderAPI.Connect.ROPC'            = 'Connecting to {0} via Credentials' # $serviceName
-	'Connect-DefenderAPI.Error.CertError'         = 'Failed to connect to {0} via Certificate due to certificate errors' # $serviceName
-	'Connect-ServiceBrowser.AuthorizeUri'         = 'Authorize Uri: {0}' # $uriFinal
-	'Invoke-DefenderAPIRequest.Error.QueryFailed' = 'Failed to execute {0} against {1}' # $Method, $Path
-	'Invoke-DefenderAPIRequest.Query.Throttling'  = 'Request is being throttled, waiting for {0} seconds' # $delay
-	'Invoke-DefenderAPIRequest.Request'           = 'Executing {0} against {1}' # $Method, $parameters.Uri
+	'Connect-DefenderAPI.Error.MdcaNoTenant'  = 'Error connecting to MDCA: Must specify the "-TenantName" parameter!'
+
+	'New-MdcaSubnet.Create'                   = 'Creating a new subnet: {0}' # $Name
+
+	'Remove-MdcaSubnet.Deleting'              = 'Deleting subnet {0}' # $subnetID
+
+	'Set-MdcaSubnet.DuplicateName'            = 'Error updating {0}: Duplicate name detected ({1} / {2}). The name of a subnet must be changed on each request.' # $ID, $Name, $subnet.name
+	'Set-MdcaSubnet.Modify'                   = 'Updating subnet {1} ({0})' # $subnet.name, $Name
+	'Set-MdcaSubnet.NotFound'                 = 'Unable to find subnet {0}. Ensure the subnet you are trying to modify actually exists.' # $ID
+
 }

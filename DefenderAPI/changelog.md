@@ -2,6 +2,7 @@
 
 ## ???
 
++ New: MDCA Connection and Commands
 + Upd: Migrated authentication to use external module "EntraAuth"
 
 ## 0.8.5 (2024-04-05)
