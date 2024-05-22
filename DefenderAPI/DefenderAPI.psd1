@@ -4,7 +4,7 @@
 RootModule = 'DefenderAPI.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.8.5'
+ModuleVersion = '0.9.8'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -44,7 +44,7 @@ PowerShellVersion = '5.1'
 
 # Modules that must be imported into the global environment prior to importing this module
 RequiredModules = @(@{ModuleName = 'PSFramework'; ModuleVersion = '1.10.318'; }, 
-               @{ModuleName = 'EntraAuth'; ModuleVersion = '1.0.4'; })
+               @{ModuleName = 'EntraAuth'; ModuleVersion = '1.1.11'; })
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()

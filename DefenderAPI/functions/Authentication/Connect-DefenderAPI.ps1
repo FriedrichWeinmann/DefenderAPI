@@ -70,6 +70,17 @@
 
 		Part of the Resource Owner Password Credential (ROPC) workflow.
 
+	.PARAMETER VaultName
+		Name of the Azure Key Vault from which to retrieve the certificate or client secret used for the authentication.
+		Secrets retrieved from the vault are not cached, on token expiration they will be retrieved from the Vault again.
+		In order for this flow to work, please ensure that you either have an active AzureKeyVault service connection,
+		or are connected via Connect-AzAccount.
+
+	.PARAMETER SecretName
+		Name of the secret to use from the Azure Key Vault specified through the '-VaultName' parameter.
+		In order for this flow to work, please ensure that you either have an active AzureKeyVault service connection,
+		or are connected via Connect-AzAccount.
+
 	.PARAMETER Service
 		The service to connect to.
 		Individual commands using Invoke-MdeRequest specify the service to use and thus identify the token needed.
@@ -79,6 +90,17 @@
 		The base url to the service connecting to.
 		Used for authentication, scopes and executing requests.
 		Defaults to: https://api.securitycenter.microsoft.com/api
+
+	.PARAMETER MdcaToken
+		Legacy API Token for Microsoft Defender for Cloud Apps.
+		Please stop using this and migrate to modern authentication.
+
+	.PARAMETER TenantName
+		The name of the tenant you are connecting for.
+		Used solely for connections to Microsoft Defender for Cloud Apps connections.
+		If your fully qualified tenant name is "contoso.onmicrosoft.com", the value to provide is "contoso".
+		This is used as the first element in the service url for MDCA connections.
+		If that name just won't work, check in the defender portal settings, under cloud apps in the overview what the API url is.
 	
 	.EXAMPLE
 		PS C:\> Connect-DefenderAPI -ClientID $clientID -TenantID $tenantID
@@ -109,6 +131,7 @@
 		[Parameter(Mandatory = $true, ParameterSetName = 'AppCertificate')]
 		[Parameter(Mandatory = $true, ParameterSetName = 'AppSecret')]
 		[Parameter(Mandatory = $true, ParameterSetName = 'UsernamePassword')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'KeyVault')]
 		[string]
 		$ClientID,
 		
@@ -117,6 +140,7 @@
 		[Parameter(Mandatory = $true, ParameterSetName = 'AppCertificate')]
 		[Parameter(Mandatory = $true, ParameterSetName = 'AppSecret')]
 		[Parameter(Mandatory = $true, ParameterSetName = 'UsernamePassword')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'KeyVault')]
 		[string]
 		$TenantID,
 		
@@ -173,11 +197,20 @@
 		[securestring]
 		$MdcaToken,
 
+		[Parameter(Mandatory = $true, ParameterSetName = 'KeyVault')]
+		[string]
+		$VaultName,
+
+		[Parameter(Mandatory = $true, ParameterSetName = 'KeyVault')]
+		[string]
+		$SecretName,
+
 		[Parameter(ParameterSetName = 'Browser')]
 		[Parameter(ParameterSetName = 'DeviceCode')]
 		[Parameter(ParameterSetName = 'AppCertificate')]
 		[Parameter(ParameterSetName = 'AppSecret')]
 		[Parameter(ParameterSetName = 'UsernamePassword')]
+		[Parameter(ParameterSetName = 'KeyVault')]
 		[Parameter(Mandatory = $true, ParameterSetName = 'MdcaLegacyToken')]
 		[string]
 		$TenantName,
@@ -187,6 +220,7 @@
 		[Parameter(ParameterSetName = 'AppCertificate')]
 		[Parameter(ParameterSetName = 'AppSecret')]
 		[Parameter(ParameterSetName = 'UsernamePassword')]
+		[Parameter(ParameterSetName = 'KeyVault')]
 		[ValidateSet('Endpoint', 'Security', 'MDCA')]
 		[string[]]
 		$Service = 'Endpoint',
@@ -196,6 +230,7 @@
 		[Parameter(ParameterSetName = 'AppCertificate')]
 		[Parameter(ParameterSetName = 'AppSecret')]
 		[Parameter(ParameterSetName = 'UsernamePassword')]
+		[Parameter(ParameterSetName = 'KeyVault')]
 		[string]
 		$ServiceUrl
 	)
