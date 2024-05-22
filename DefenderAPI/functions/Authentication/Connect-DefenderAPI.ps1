@@ -205,12 +205,26 @@
 		[string]
 		$SecretName,
 
+		[Parameter(Mandatory = $true, ParameterSetName = 'Identity')]
+		[switch]
+		$Identity,
+
+		[Parameter(ParameterSetName = 'Identity')]
+		[string]
+		$IdentityID,
+
+		[Parameter(ParameterSetName = 'Identity')]
+		[ValidateSet('ClientID', 'ResourceID', 'PrincipalID')]
+		[string]
+		$IdentityType = 'ClientID',
+
 		[Parameter(ParameterSetName = 'Browser')]
 		[Parameter(ParameterSetName = 'DeviceCode')]
 		[Parameter(ParameterSetName = 'AppCertificate')]
 		[Parameter(ParameterSetName = 'AppSecret')]
 		[Parameter(ParameterSetName = 'UsernamePassword')]
 		[Parameter(ParameterSetName = 'KeyVault')]
+		[Parameter(ParameterSetName = 'Identity')]
 		[Parameter(Mandatory = $true, ParameterSetName = 'MdcaLegacyToken')]
 		[string]
 		$TenantName,
@@ -221,6 +235,7 @@
 		[Parameter(ParameterSetName = 'AppSecret')]
 		[Parameter(ParameterSetName = 'UsernamePassword')]
 		[Parameter(ParameterSetName = 'KeyVault')]
+		[Parameter(ParameterSetName = 'Identity')]
 		[ValidateSet('Endpoint', 'Security', 'MDCA')]
 		[string[]]
 		$Service = 'Endpoint',
@@ -231,6 +246,7 @@
 		[Parameter(ParameterSetName = 'AppSecret')]
 		[Parameter(ParameterSetName = 'UsernamePassword')]
 		[Parameter(ParameterSetName = 'KeyVault')]
+		[Parameter(ParameterSetName = 'Identity')]
 		[string]
 		$ServiceUrl
 	)

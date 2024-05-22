@@ -1,9 +1,10 @@
 ﻿# Changelog
 
-## 0.9.8 (2024-05-22)
+## 0.9.9 (2024-05-22)
 
 + New: MDCA Connection and Commands
 + Upd: Connect-DefenderAPI - Added support for direct Key Vault authentication
++ Upd: Connect-DefenderAPI - Added support for MSI authentication
 + Upd: Migrated authentication to use external module "EntraAuth"
 
 ## 0.8.5 (2024-04-05)
