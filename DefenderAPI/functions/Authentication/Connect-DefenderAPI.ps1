@@ -81,6 +81,17 @@
 		In order for this flow to work, please ensure that you either have an active AzureKeyVault service connection,
 		or are connected via Connect-AzAccount.
 
+	.PARAMETER Identity
+		Log on as the Managed Identity of the current system.
+		Only works in environments with managed identities, such as Azure Function Apps or Runbooks.
+
+	.PARAMETER IdentityID
+		ID of the User-Managed Identity to connect as.
+		https://learn.microsoft.com/en-us/azure/app-service/overview-managed-identity
+
+	.PARAMETER IdentityType
+		Type of the User-Managed Identity.
+
 	.PARAMETER Service
 		The service to connect to.
 		Individual commands using Invoke-MdeRequest specify the service to use and thus identify the token needed.
