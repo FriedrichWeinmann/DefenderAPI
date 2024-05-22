@@ -39,6 +39,6 @@
 		$__query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 		$__path = 'advancedhunting/run'
 	
-		Invoke-DefenderAPIRequest -Service 'security' -Path $__path -Method post -Body $__body -Query $__query -RequiredScopes 'AdvancedHunting.Read' | ConvertFrom-AdvancedQuery
+		Invoke-EntraRequest -Service 'DefenderAPI.Security' -Path $__path -Method post -Body $__body -Query $__query -RequiredScopes 'AdvancedHunting.Read' | ConvertFrom-AdvancedQuery
 	}
 }

@@ -8,11 +8,11 @@
 
     Scopes required (delegate auth): Machine.Isolate
 
-.PARAMETER IsolationType
-    Type of the isolation. Allowed values are 'Full' (for full isolation) or 'Selective' (to restrict only limited set of applications from accessing the network)
-
 .PARAMETER Comment
     A comment to associate to the isolation
+
+.PARAMETER IsolationType
+    Type of the isolation. Allowed values are 'Full' (for full isolation) or 'Selective' (to restrict only limited set of applications from accessing the network)
 
 .PARAMETER MachineID
     The ID of the machine to isolate
@@ -27,13 +27,13 @@
 #>
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [string]
-        $IsolationType,
-
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
         $Comment,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [string]
+        $IsolationType,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [Alias('Id')]
@@ -42,23 +42,23 @@
     )
     process {
 		$__mapping = @{
-            'IsolationType' = 'Isolation Type'
             'Comment' = 'Comment'
+            'IsolationType' = 'Isolation Type'
 		}
 
 		$__param = @{
-			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('IsolationType','Comment') -Mapping $__mapping
+			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('Comment','IsolationType') -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'machines/{MachineID}/isolate' -Replace '{MachineID}',$MachineID
 			Method = 'post'
 			RequiredScopes = 'Machine.Isolate'
-			
+			Service = 'DefenderAPI.Endpoint'
 		}
 		
 		$__param += $PSBoundParameters | ConvertTo-HashTable -Include 'ErrorAction', 'WarningAction', 'Verbose'
 
-		try { Invoke-DefenderAPIRequest @__param }
+		try { Invoke-EntraRequest @__param }
 		catch { $PSCmdlet.ThrowTerminatingError($_) }
     }
 }

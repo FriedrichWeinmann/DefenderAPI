@@ -12,14 +12,14 @@
     ID of the recommendation to retrieve.
 
 .EXAMPLE
-    PS C:\> Get-MdRecommendation
-
-    Lists all security recommendations
-
-.EXAMPLE
     PS C:\> Get-MdRecommendation -RecommendationID $recommendationid
 
     <insert description here>
+
+.EXAMPLE
+    PS C:\> Get-MdRecommendation
+
+    Lists all security recommendations
 
 .LINK
     https://docs.microsoft.com/en-us/microsoft-365/security/defender-endpoint/get-all-recommendations?view=o365-worldwide
@@ -43,12 +43,12 @@
 			Path = 'recommendations'
 			Method = 'get'
 			RequiredScopes = 'SecurityRecommendation.Read'
-			
+			Service = 'DefenderAPI.Endpoint'
 		}
 		if ($RecommendationID) { $__param.Path += "/$RecommendationID" }
 		$__param += $PSBoundParameters | ConvertTo-HashTable -Include 'ErrorAction', 'WarningAction', 'Verbose'
 
-		try { Invoke-DefenderAPIRequest @__param }
+		try { Invoke-EntraRequest @__param }
 		catch { $PSCmdlet.ThrowTerminatingError($_) }
     }
 }

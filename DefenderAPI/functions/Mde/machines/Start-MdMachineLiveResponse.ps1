@@ -8,6 +8,9 @@
 
     Scopes required (delegate auth): Machine.LiveResponse
 
+.PARAMETER Comment
+    A comment to associate to the isolation
+
 .PARAMETER Commands
     The live response commands to execute.
 Example:
@@ -25,14 +28,11 @@ Example:
 	)
 }
 
-.PARAMETER Comment
-    A comment to associate to the isolation
-
 .PARAMETER MachineID
     ID of the machine to execute a live response script upon
 
 .EXAMPLE
-    PS C:\> Start-MdMachineLiveResponse -Commands $commands -Comment $comment -MachineID $machineid
+    PS C:\> Start-MdMachineLiveResponse -Comment $comment -Commands $commands -MachineID $machineid
 
     Run live response api commands for a single machine
 
@@ -43,12 +43,12 @@ Example:
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [array]
-        $Commands,
-
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
         $Comment,
+
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [array]
+        $Commands,
 
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [Alias('Id')]
@@ -57,23 +57,23 @@ Example:
     )
     process {
 		$__mapping = @{
-            'Commands' = 'Commands'
             'Comment' = 'Comment'
+            'Commands' = 'Commands'
 		}
 
 		$__param = @{
-			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('Commands','Comment') -Mapping $__mapping
+			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('Comment','Commands') -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'machines/{MachineID}/runliveresponse' -Replace '{MachineID}',$MachineID
 			Method = 'post'
 			RequiredScopes = 'Machine.LiveResponse'
-			
+			Service = 'DefenderAPI.Endpoint'
 		}
 		
 		$__param += $PSBoundParameters | ConvertTo-HashTable -Include 'ErrorAction', 'WarningAction', 'Verbose'
 
-		try { Invoke-DefenderAPIRequest @__param }
+		try { Invoke-EntraRequest @__param }
 		catch { $PSCmdlet.ThrowTerminatingError($_) }
     }
 }

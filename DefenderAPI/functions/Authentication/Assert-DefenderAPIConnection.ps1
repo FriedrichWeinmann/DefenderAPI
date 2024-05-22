@@ -1,6 +1,5 @@
-﻿function Assert-DefenderAPIConnection
-{
-<#
+﻿function Assert-DefenderAPIConnection {
+	<#
 	.SYNOPSIS
 		Asserts a connection has been established.
 	
@@ -38,12 +37,20 @@
 		$RequiredScopes
 	)
 	
-	process
-	{
-		if ($script:_DefenderTokens["$Service"]) { return }
+	begin {
+		$serviceMap = @{
+			Endpoint = 'DefenderAPI.Endpoint'
+			Security = 'DefenderAPI.Security'
+			MDCA     = 'DefenderAPI.MDCA'
+		}
+	}
+	process {
+		$actualServiceName = $Service
+		if ($serviceMap[$Service]) { $actualServiceName = $serviceMap[$Service] }
+		if (Get-EntraToken -Service $actualServiceName) { return }
 		
 		$message = "Not connected yet! Use Connect-DefenderAPIService to establish a connection to '$Service' first."
-		if ($RequiredScopes) { $message = $message + " Scopes required for this call: $($RequiredScopes -join ', ')"}
-		Invoke-TerminatingException -Cmdlet $Cmdlet -Message  -Category ConnectionError
+		if ($RequiredScopes) { $message = $message + " Scopes required for this call: $($RequiredScopes -join ', ')" }
+		Invoke-TerminatingException -Cmdlet $Cmdlet -Message $message -Category ConnectionError
 	}
 }

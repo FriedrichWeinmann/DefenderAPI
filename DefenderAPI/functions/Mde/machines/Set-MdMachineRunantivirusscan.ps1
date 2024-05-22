@@ -6,11 +6,11 @@
 .DESCRIPTION
     Initiate Windows Defender Antivirus scan on a machine
 
-.PARAMETER ScanType
-    Type of scan to perform. Allowed values are 'Quick' or 'Full'
-
 .PARAMETER Comment
     A comment to associate to the scan request
+
+.PARAMETER ScanType
+    Type of scan to perform. Allowed values are 'Quick' or 'Full'
 
 .PARAMETER MachineID
     The ID of the machine to scan
@@ -26,13 +26,13 @@
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
     [CmdletBinding(DefaultParameterSetName = 'default')]
     param (
-        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
-        [string]
-        $ScanType,
-
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [string]
         $Comment,
+
+        [Parameter(ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
+        [string]
+        $ScanType,
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ParameterSetName = 'default')]
         [Alias('Id')]
@@ -41,23 +41,23 @@
     )
     process {
 		$__mapping = @{
-            'ScanType' = 'Scan Type'
             'Comment' = 'Comment'
+            'ScanType' = 'Scan Type'
 		}
 
 		$__param = @{
-			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('ScanType','Comment') -Mapping $__mapping
+			Body = $PSBoundParameters | ConvertTo-HashTable -Include @('Comment','ScanType') -Mapping $__mapping
 			Query = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Header = $PSBoundParameters | ConvertTo-HashTable -Include @() -Mapping $__mapping
 			Path = 'machines/{MachineID}/runAntiVirusScan' -Replace '{MachineID}',$MachineID
 			Method = 'post'
 			
-			
+			Service = 'DefenderAPI.Endpoint'
 		}
 		
 		$__param += $PSBoundParameters | ConvertTo-HashTable -Include 'ErrorAction', 'WarningAction', 'Verbose'
 
-		try { Invoke-DefenderAPIRequest @__param }
+		try { Invoke-EntraRequest @__param }
 		catch { $PSCmdlet.ThrowTerminatingError($_) }
     }
 }

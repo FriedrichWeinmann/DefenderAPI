@@ -8,12 +8,13 @@ $global:_arCommands = @{ }
 # [System.IO.File]::WriteAllText("$PSScriptRoot\mde.swagger.json", $swagger)
 
 $paramConvertFromARSwagger = @{
-	Path          = "$PSScriptRoot\mde.swagger.json"
-	RestCommand   = 'Invoke-DefenderAPIRequest'
-	ModulePrefix  = 'Md'
-	PathPrefix    = '/api'
-	TransformPath = "$PSScriptRoot\overridesMde"
+	Path                      = "$PSScriptRoot\mde.swagger.json"
+	RestCommand               = 'Invoke-EntraRequest'
+	ModulePrefix              = 'Md'
+	PathPrefix                = '/api'
+	TransformPath             = "$PSScriptRoot\overridesMde"
 	ConvertToHashtableCommand = 'ConvertTo-HashTable'
+	ServiceName               = 'DefenderAPI.Endpoint'
 }
 
 $paramExportARCommand = @{

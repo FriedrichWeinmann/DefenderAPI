@@ -21,6 +21,12 @@
 		Use an interactive logon in your default browser.
 		This is the default logon experience.
 
+	.PARAMETER BrowserMode
+		How the browser used for authentication is selected.
+		Options:
+		+ Auto (default): Automatically use the default browser.
+		+ PrintLink: The link to open is printed on console and user selects which browser to paste it into (must be used on the same machine)
+
 	.PARAMETER DeviceCode
 		Use the Device Code delegate authentication flow.
 		This will prompt the user to complete login via browser.
@@ -64,6 +70,28 @@
 
 		Part of the Resource Owner Password Credential (ROPC) workflow.
 
+	.PARAMETER VaultName
+		Name of the Azure Key Vault from which to retrieve the certificate or client secret used for the authentication.
+		Secrets retrieved from the vault are not cached, on token expiration they will be retrieved from the Vault again.
+		In order for this flow to work, please ensure that you either have an active AzureKeyVault service connection,
+		or are connected via Connect-AzAccount.
+
+	.PARAMETER SecretName
+		Name of the secret to use from the Azure Key Vault specified through the '-VaultName' parameter.
+		In order for this flow to work, please ensure that you either have an active AzureKeyVault service connection,
+		or are connected via Connect-AzAccount.
+
+	.PARAMETER Identity
+		Log on as the Managed Identity of the current system.
+		Only works in environments with managed identities, such as Azure Function Apps or Runbooks.
+
+	.PARAMETER IdentityID
+		ID of the User-Managed Identity to connect as.
+		https://learn.microsoft.com/en-us/azure/app-service/overview-managed-identity
+
+	.PARAMETER IdentityType
+		Type of the User-Managed Identity.
+
 	.PARAMETER Service
 		The service to connect to.
 		Individual commands using Invoke-MdeRequest specify the service to use and thus identify the token needed.
@@ -73,6 +101,17 @@
 		The base url to the service connecting to.
 		Used for authentication, scopes and executing requests.
 		Defaults to: https://api.securitycenter.microsoft.com/api
+
+	.PARAMETER MdcaToken
+		Legacy API Token for Microsoft Defender for Cloud Apps.
+		Please stop using this and migrate to modern authentication.
+
+	.PARAMETER TenantName
+		The name of the tenant you are connecting for.
+		Used solely for connections to Microsoft Defender for Cloud Apps connections.
+		If your fully qualified tenant name is "contoso.onmicrosoft.com", the value to provide is "contoso".
+		This is used as the first element in the service url for MDCA connections.
+		If that name just won't work, check in the defender portal settings, under cloud apps in the overview what the API url is.
 	
 	.EXAMPLE
 		PS C:\> Connect-DefenderAPI -ClientID $clientID -TenantID $tenantID
@@ -98,20 +137,40 @@
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "")]
 	[CmdletBinding(DefaultParameterSetName = 'Browser')]
 	param (
-		[Parameter(Mandatory = $true)]
+		[Parameter(Mandatory = $true, ParameterSetName = 'Browser')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'DeviceCode')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'AppCertificate')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'AppSecret')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'UsernamePassword')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'KeyVault')]
 		[string]
 		$ClientID,
 		
-		[Parameter(Mandatory = $true)]
+		[Parameter(Mandatory = $true, ParameterSetName = 'Browser')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'DeviceCode')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'AppCertificate')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'AppSecret')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'UsernamePassword')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'KeyVault')]
 		[string]
 		$TenantID,
 		
+		[Parameter(ParameterSetName = 'Browser')]
+		[Parameter(ParameterSetName = 'DeviceCode')]
+		[Parameter(ParameterSetName = 'AppCertificate')]
+		[Parameter(ParameterSetName = 'AppSecret')]
+		[Parameter(ParameterSetName = 'UsernamePassword')]
 		[string[]]
 		$Scopes,
 
 		[Parameter(ParameterSetName = 'Browser')]
 		[switch]
 		$Browser,
+
+		[Parameter(ParameterSetName = 'Browser')]
+		[ValidateSet('Auto','PrintLink')]
+		[string]
+		$BrowserMode = 'Auto',
 
 		[Parameter(ParameterSetName = 'DeviceCode')]
 		[switch]
@@ -145,105 +204,91 @@
 		[PSCredential]
 		$Credential,
 
-		[PsfArgumentCompleter('DefenderAPI.Service')]
-		[PsfValidateSet(TabCompletion = 'DefenderAPI.Service')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'MdcaLegacyToken')]
+		[securestring]
+		$MdcaToken,
+
+		[Parameter(Mandatory = $true, ParameterSetName = 'KeyVault')]
+		[string]
+		$VaultName,
+
+		[Parameter(Mandatory = $true, ParameterSetName = 'KeyVault')]
+		[string]
+		$SecretName,
+
+		[Parameter(Mandatory = $true, ParameterSetName = 'Identity')]
+		[switch]
+		$Identity,
+
+		[Parameter(ParameterSetName = 'Identity')]
+		[string]
+		$IdentityID,
+
+		[Parameter(ParameterSetName = 'Identity')]
+		[ValidateSet('ClientID', 'ResourceID', 'PrincipalID')]
+		[string]
+		$IdentityType = 'ClientID',
+
+		[Parameter(ParameterSetName = 'Browser')]
+		[Parameter(ParameterSetName = 'DeviceCode')]
+		[Parameter(ParameterSetName = 'AppCertificate')]
+		[Parameter(ParameterSetName = 'AppSecret')]
+		[Parameter(ParameterSetName = 'UsernamePassword')]
+		[Parameter(ParameterSetName = 'KeyVault')]
+		[Parameter(ParameterSetName = 'Identity')]
+		[Parameter(Mandatory = $true, ParameterSetName = 'MdcaLegacyToken')]
+		[string]
+		$TenantName,
+
+		[Parameter(ParameterSetName = 'Browser')]
+		[Parameter(ParameterSetName = 'DeviceCode')]
+		[Parameter(ParameterSetName = 'AppCertificate')]
+		[Parameter(ParameterSetName = 'AppSecret')]
+		[Parameter(ParameterSetName = 'UsernamePassword')]
+		[Parameter(ParameterSetName = 'KeyVault')]
+		[Parameter(ParameterSetName = 'Identity')]
+		[ValidateSet('Endpoint', 'Security', 'MDCA')]
 		[string[]]
 		$Service = 'Endpoint',
 
+		[Parameter(ParameterSetName = 'Browser')]
+		[Parameter(ParameterSetName = 'DeviceCode')]
+		[Parameter(ParameterSetName = 'AppCertificate')]
+		[Parameter(ParameterSetName = 'AppSecret')]
+		[Parameter(ParameterSetName = 'UsernamePassword')]
+		[Parameter(ParameterSetName = 'KeyVault')]
+		[Parameter(ParameterSetName = 'Identity')]
 		[string]
 		$ServiceUrl
 	)
-	process {
-		foreach ($serviceName in $Service) {
-			$serviceObject = Get-DefenderAPIService -Name $serviceName
-
-			$commonParam = @{
-				ClientID = $ClientID
-				TenantID = $TenantID
-				Resource = $serviceObject.Resource
-			}
-			$effectiveServiceUrl = $ServiceUrl
-			if (-not $ServiceUrl) { $effectiveServiceUrl = $serviceObject.ServiceUrl }
-			
-			#region Connection
-			switch ($PSCmdlet.ParameterSetName) {
-				#region Browser
-				Browser {
-					$scopesToUse = $Scopes
-					if (-not $Scopes) { $scopesToUse = $serviceObject.DefaultScopes }
-
-					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.Browser' -ActionStringValues $serviceName -ScriptBlock {
-						$result = Connect-ServiceBrowser @commonParam -SelectAccount -Scopes $scopesToUse -ErrorAction Stop
-					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
-
-					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $effectiveServiceUrl, $false)
-					if ($serviceObject.Header.Count -gt 0) { $token.Header = $serviceObject.Header.Clone() }
-					$token.SetTokenMetadata($result)
-					$script:_DefenderTokens[$serviceName] = $token
-				}
-				#endregion Browser
-
-				#region DeviceCode
-				DeviceCode {
-					$scopesToUse = $Scopes
-					if (-not $Scopes) { $scopesToUse = $serviceObject.DefaultScopes }
-
-					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.DeviceCode' -ActionStringValues $serviceName -ScriptBlock {
-						$result = Connect-ServiceDeviceCode @commonParam -Scopes $scopesToUse -ErrorAction Stop
-					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
-
-					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $effectiveServiceUrl, $true)
-					if ($serviceObject.Header.Count -gt 0) { $token.Header = $serviceObject.Header.Clone() }
-					$token.SetTokenMetadata($result)
-					$script:_DefenderTokens[$serviceName] = $token
-				}
-				#endregion DeviceCode
-
-				#region ROPC
-				UsernamePassword {
-					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.ROPC' -ActionStringValues $serviceName -ScriptBlock {
-						$result = Connect-ServicePassword @commonParam -Credential $Credential -ErrorAction Stop
-					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
-
-					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $Credential, $effectiveServiceUrl)
-					if ($serviceObject.Header.Count -gt 0) { $token.Header = $serviceObject.Header.Clone() }
-					$token.SetTokenMetadata($result)
-					$script:_DefenderTokens[$serviceName] = $token
-				}
-				#endregion ROPC
-
-				#region AppSecret
-				AppSecret {
-					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.ClientSecret' -ActionStringValues $serviceName -ScriptBlock {
-						$result = Connect-ServiceClientSecret @commonParam -ClientSecret $ClientSecret -ErrorAction Stop
-					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
-
-					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $ClientSecret, $effectiveServiceUrl)
-					if ($serviceObject.Header.Count -gt 0) { $token.Header = $serviceObject.Header.Clone() }
-					$token.SetTokenMetadata($result)
-					$script:_DefenderTokens[$serviceName] = $token
-				}
-				#endregion AppSecret
-
-				#region AppCertificate
-				AppCertificate {
-					try { $certificateObject = Resolve-Certificate -BoundParameters $PSBoundParameters }
-					catch {
-						Stop-PSFFunction -String 'Connect-DefenderAPI.Error.CertError' -StringValues $serviceName -Tag connect, fail -ErrorRecord $_ -EnableException $true -Cmdlet $PSCmdlet -Target $serviceName
-					}
 	
-					Invoke-PSFProtectedCommand -ActionString 'Connect-DefenderAPI.Connect.Certificate' -ActionStringValues $serviceName, $certificateObject.Subject, $certificateObject.Thumbprint -ScriptBlock {
-						$result = Connect-ServiceCertificate @commonParam -Certificate $certificateObject -ErrorAction Stop
-					} -Target $serviceName -EnableException $true -PSCmdlet $PSCmdlet
-
-					$token = [DefenderToken]::new($serviceName, $ClientID, $TenantID, $certificateObject, $effectiveServiceUrl)
-					if ($serviceObject.Header.Count -gt 0) { $token.Header = $serviceObject.Header.Clone() }
-					$token.SetTokenMetadata($result)
-					$script:_DefenderTokens[$serviceName] = $token
-				}
-				#endregion AppCertificate
-			}
-			#endregion Connection
+	begin {
+		if ($Service -contains 'MDCA' -and -not $TenantName) {
+			Stop-PSFFunction -String 'Connect-DefenderAPI.Error.MdcaNoTenant' -EnableException $true -Cmdlet $PSCmdlet
 		}
+
+		if ($Service -contains 'MDCA' -or $MdcaToken) {
+			$param = @{
+				Name          = 'DefenderAPI.MDCA'
+				ServiceUrl    = "https://$TenantName.portal.cloudappsecurity.com/api/v1"
+				Resource      = '05a65629-4c1b-48c1-a78b-804c4abdd4af'
+				DefaultScopes = @()
+				Header        = @{ 'content-type' = 'application/json' }
+				HelpUrl       = 'https://learn.microsoft.com/en-us/defender-cloud-apps/api-introduction'
+			}
+			Register-EntraService @param
+		}
+	}
+	process {
+		$actualServiceNames = foreach ($serviceName in $Service) { "DefenderAPI.$serviceName" }
+
+		if ($MdcaToken) {
+			Set-MdcaToken -Token $MdcaToken -TenantName $TenantName
+			return
+		}
+
+		$param = $PSBoundParameters | ConvertTo-PSFHashtable -ReferenceCommand Connect-EntraService
+		$param.Service = $actualServiceNames
+		Connect-EntraService @param
 	}
 }
